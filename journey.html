@@ -1,0 +1,93 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link type="text/css" href="global.css" rel="stylesheet" />
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+</head>
+<body onload="journey_onLoad()">
+	<form id="form1">
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+			  <a class="navbar-brand" href="#">Navitia Explorer</a>
+			</div>
+			<div id="menu_div">	</div>
+		  </div>
+		</nav>		
+		<input type="hidden" id="forbidden_uris" name="forbidden_uris" value="">
+		<div id="content" >
+			<h1 style="text-align:center;padding:0px;margin:0px">Recherche/diagnostique d'itinéraire</h1>
+			<div id="params1" style="margin:0px;padding:0px;">
+				<table>
+					<tr>
+						<td width="310px">
+							<label for="from_text">Départ : </label>
+							<input id="from_text" name="from_text" type="text">      <input id="from" name="from" type="hidden"> 
+							<label for="to_text">Arrivée : </label>
+							<input id="to_text" name="to_text" type="text">      <input id="to" name="to" type="hidden"> 
+						</td>
+						<td >
+							date : <input type="texte" id="date" name="date" size="5"><br>
+							heure : <input type="texte" id="time" name="time" size="1"><br>
+							Partir après<input type="radio" id="datetime_represents_d" name="datetime_represents" value="departure"><br>
+							Arriver avant<input type="radio" id="datetime_represents_a" name="datetime_represents" value="arrival">
+
+						</td>
+						<td valign="top">
+							<input type="checkbox" name="debug" id="debug">debug<br>
+							<select name="min_nb_journeys" id="min_nb_journeys">
+								<option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
+							</select>
+						</td>
+						<td valign="top" style="font-size:10px">
+							<input type="checkbox" name="first_section_mode" id="first_section_mode_walking" value="walking">Depart à pied<br>
+							<input type="checkbox" name="first_section_mode" id="first_section_mode_bike" value="bike">Depart à vélo<br>
+							<input type="checkbox" name="first_section_mode" id="first_section_mode_bss" value="bss">Depart en VLS<br>
+							<input type="checkbox" name="first_section_mode" id="first_section_mode_car" value="car">Depart en voiture<br>
+							Durée d'accroche (min) : <input type="text" name="max_duration_to_pt" id="max_duration_to_pt" value="15" style="width:25px">
+						</td>
+						<td valign="top" style="font-size:10px">
+							<input type="checkbox" name="last_section_mode" id="last_section_mode_walking" value="walking">Arrivée à pied<br>
+							<input type="checkbox" name="last_section_mode" id="last_section_mode_bike" value="bike">Arrivée à vélo<br>
+							<input type="checkbox" name="last_section_mode" id="last_section_mode_bss" value="bss">Arrivée en VLS<br>
+							<input type="checkbox" name="last_section_mode" id="last_section_mode_car" value="car">Arrivée en voiture<br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" align="center">
+								<input type="button" value="Recherche (F9)" onclick="document.forms[0].submit();"> &nbsp;
+								<input type="button" value="Partir lundi à 9h (F10)" onclick="submit_monday_search();">
+								<div name="journey_url" id="journey_url" style="display:inline;font-size:10px"></div><br>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<table width="100%" height="500px" border="1">
+				<tr>
+					<td width="50%" valign="top">
+				<div id="journeys"></div>
+					</td>
+					<td width="50%">
+				<div id="map-canvas"  style="height: 100%"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+	<div id="footer" class="footer">
+		github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>			
+		<a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
+		<a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
+	</div>    
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script type="text/javascript" src="./assets/js/shortcut.js"></script>
+	<script type="text/javascript" src="./assets/js/menu.js"></script>
+	<script type="text/javascript" src="./assets/js/lib.js"></script>
+	<script type="text/javascript" src="./assets/js/conversion.js"></script>
+	<script type="text/javascript" src="./assets/js/journey.js"></script>
+	<script type="text/javascript" src="./assets/js/journey_autocomplete.js"></script>
+</body>
+</html>

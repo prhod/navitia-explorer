@@ -1,0 +1,14 @@
+{
+    "environnements": {
+		"api.navitia.io": {
+			"url" : "http://api.navitia.io/v1/",
+			"key" : "token_from_navitia.io_needed",
+			"tyr" : ""
+		}
+	},
+	"default" : {
+		"environnement": "api.navitia.io",
+		"coverage": "fr-idf"
+	},
+    "safe_mode" : "yes"
+}

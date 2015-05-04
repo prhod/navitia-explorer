@@ -1,0 +1,60 @@
+body {font-size: 62.5%;
+    font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+}
+ul.title {
+ padding:0;
+ margin:0;
+ list-style-type:none;
+ }
+li.title {
+ margin-left:2px;
+ float:left; /*pour IE*/
+ }
+ul.title li.title a.title {
+ display:block;
+ float:left;
+ width:100px;
+ #background-color:#6495ED;
+ background-color:#FFFFFF;
+ color:black;
+ text-decoration:none;
+ text-align:center;
+ padding:5px;
+ border:2px solid;
+ /*pour avoir un effet "outset" avec IE :*/
+ border-color:#DCDCDC #696969 #696969 #DCDCDC;
+ }
+ul li a:hover {
+ background-color:#D3D3D3;
+ border-color:#696969 #DCDCDC #DCDCDC #696969;
+ }
+
+.icon-ligne
+{
+  display: inline-block;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  background-color: #323a45;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+/*styles pour la page journeys*/
+.journey {
+	border-style:solid;
+	border-width:2px;
+	margin-bottom:10px;
+}
+.section{
+	border-style:dotted;
+	border-width:1px;
+}
+
+.footer{
+	text-align : center;
+	font-size: 14px;
+}
