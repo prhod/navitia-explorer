@@ -5,7 +5,7 @@ $(document).ready(function(){
         source: function( request, response) {
             $.ajax({
                 url: "./navitia.php" + '?ws_name=' + document.getElementById("ws_name").value +"&ress=coverage/" + 
-                    document.getElementById("coverage").value+"/places?type[]=stop_area",
+                    document.getElementById("coverage").value+"/places?",
                 dataType: "json",
                 data: {
                 q: request.term
@@ -31,7 +31,7 @@ $(document).ready(function(){
 		source: function( request, response) {
             $.ajax({
                 url: "./navitia.php" + '?ws_name=' + document.getElementById("ws_name").value +"&ress=coverage/" + 
-                    document.getElementById("coverage").value+"/places?type[]=stop_area",
+                    document.getElementById("coverage").value+"/places?",
                 dataType: "json",
                 data: {
                 q: request.term
