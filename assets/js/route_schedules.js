@@ -30,7 +30,7 @@ function init_date(sdate, sheure){
 }
 
 function getNetworkSelect(){
-	callNavitia(ws_name, '/coverage/'+t["coverage"]+'/networks/', function(response){
+	callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/', function(response){
 		first_id = "";
 		selected_exists = false;
 		var str="<select name='network_id' id='network_id' onchange='document.forms[0].submit()'>"
@@ -58,7 +58,7 @@ function getLineSelect(){
 	if (t["network_id"]) {
 		first_id = "";
 		selected_exists = false;
-		callNavitia(ws_name, '/coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/', function(response){
+		callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/', function(response){
 			var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
 			for (var n in response.lines) {
 				var line = response.lines[n];
@@ -85,7 +85,7 @@ function getRouteSelect(){
 	if (t["line_id"]) {
 		first_id = ""
 		selected_exists = false;
-		callNavitia(ws_name, '/coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/' + t["line_id"] + '/routes/', function(response){
+		callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/' + t["line_id"] + '/routes/', function(response){
 			var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
 			for (var n in response.routes) {
 				var route = response.routes[n];

@@ -63,7 +63,7 @@ function coverage_onLoad() {
 	//coverage = new Coverage();
 	//coverage.load_coverage(print_coveragelist);
 	
-	callNavitia(ws_name, '/coverage', function(response){
+	callNavitia(ws_name, 'coverage', function(response){
 		coverages = response.regions;
 		coverages.sort(sort_compare_coverage);
 		print_coveragelist(coverages);
