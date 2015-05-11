@@ -48,7 +48,7 @@ function onMapClick(e) {
 }
 
 function doSearch(){
-	url="/coverage/"+document.getElementById("coverage").value+"/places?q="+document.getElementById('q').value;
+	url="coverage/"+document.getElementById("coverage").value+"/places?q="+document.getElementById('q').value;
 	if (document.getElementById('administrative_region').checked) {
 		url+= encodeURI("&type[]=administrative_region");
 	}
