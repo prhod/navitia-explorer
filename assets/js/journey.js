@@ -347,6 +347,8 @@ function journey_onLoad() {
 		if (t["datetime_represents"]=="arrival") {document.getElementById("datetime_represents_a").checked=true;}
 	}
 
+	document.getElementById("custom_scenario").value = (t["custom_scenario"])?t["custom_scenario"]:"";
+
 
 	map = L.map('map-canvas').setView([48.837212, 2.413], 8);
 	// add an OpenStreetMap tile layer
@@ -459,6 +461,11 @@ function getItinerary(){
 		var forbidden_uri = journey.forbidden_uris_list[i];
 		url+="&forbidden_uris[]="+forbidden_uri;
 	}
+
+    custom_scenario = t["custom_scenario"]
+    if (custom_scenario) {
+        url+="&_override_scenario="+custom_scenario
+    }
 	
 	callNavitia(document.getElementById("ws_name").value, url, function(response){
 		journey.journey_list=response.journeys;
