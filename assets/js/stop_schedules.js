@@ -51,7 +51,7 @@ function show_schedules_html(){
 		str+= "<br>";
 		str+= "route : " + item.route.id + " " + item.route.name ;
 		str+= "<br>";
-		str+= "direction : " + item.route.direction.stop_point.id + " " + item.route.direction.stop_point.name ;
+		str+= "direction : " + eval("item.route.direction." + item.route.direction.embedded_type +".id") + " " + eval("item.route.direction." + item.route.direction.embedded_type +".name") ;
 		str+= "<br>";
 		str+= "commercial_mode : " + item.route.line.commercial_mode.id + " " + item.route.line.commercial_mode.name ;
 		str+= "<br>";
