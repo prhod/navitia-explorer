@@ -2,7 +2,7 @@ ptref = function() {
     this.object_list=null,
     this.object_count=-1,
     this.object_type="",
-    this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes"],
+    this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections"],
     this.response = null,
     this.load = function(ws_name, coverage, uri, call_back){
         if (endsWith(uri, "/departures/")) {
@@ -518,7 +518,6 @@ function showRoutesHtml(){
 }
 
 function showObjectHtml(ptref){
-    console.log(ptref.object_type);
 	if (ptref.object_type == "lines") {
 		showLinesHtml();
 	} else if ( (ptref.object_type == "physical_modes") || (ptref.object_type == "commercial_modes") ) {
