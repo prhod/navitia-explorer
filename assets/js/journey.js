@@ -90,7 +90,7 @@ function getJourneyListHtml(){
 				str+="</td>";
 			}
 		}
-		str+="</tr></table>";
+		str+="<td><span>"+sec.to.name+"</span></td></tr></table>";
 		str+='</div>';
 	}
 	document.getElementById('journeys').innerHTML=str;
@@ -140,7 +140,7 @@ function showJourneyOnMap(jo){
 			str="<table width='150px' border='1px' style='font-size:10px'><th><td colspan='2' align='center'>"+sec.type+"</td></th>";
 			if (sec.type != "waiting") {
 				var myDate = IsoToJsDate(sec.departure_date_time);
-				str+='<tr><td>depart</td><td>' + sec.from.name + '<br/>' + sec.from.id + "<br/>" + formatDate(myDate, "dd/mm hh:nn") + "</td></tr>";
+				str+='<tr><td>départ</td><td>' + sec.from.name + '<br/>' + sec.from.id + "<br/>" + formatDate(myDate, "dd/mm hh:nn") + "</td></tr>";
 			}
 			dist=0;
 			if (sec.type == "street_network") {
@@ -158,9 +158,9 @@ function showJourneyOnMap(jo){
 			if (coord_start && coord_end) {dist_bird=distance_wgs84(coord_start.lat, coord_start.lon, coord_end.lat, coord_end.lon);}
 			str+='<tr><td>distance</td><td>filaire : ' + dist + " m <br/>vol d'oiseau : " +dist_bird+ " m</td></tr>";
 			if (sec.display_informations){
-				str+='<tr><td>network</td><td>' + sec.display_informations.network + "</td></tr>";
+				str+='<tr><td>réseau</td><td>' + sec.display_informations.network + "</td></tr>";
 				str+='<tr><td>mode commercial // physique</td><td>' + sec.display_informations.commercial_mode + " // " + sec.display_informations.physical_mode+"</td></tr>";
-				forbidden_link='<a href="#" onClick="add_forbidden_uri(\''+line_id+'\')">Eviter</a>';
+				forbidden_link='<a href="#" onClick="add_forbidden_uri(\''+line_id+'\')">Éviter</a>';
 				str+='<tr><td>line code - label</td><td>' + sec.display_informations.code + ' - '+sec.display_informations.label+" "+forbidden_link+"</td></tr>";
 				str+='<tr><td>direction</td><td>' + sec.display_informations.direction + "</td></tr>";
 				str+='<tr><td>headsign</td><td>' + sec.display_informations.headsign + "</td></tr>";
@@ -170,7 +170,7 @@ function showJourneyOnMap(jo){
 
 			}
 			if (sec.duration) {
-				str+='<tr><td>duration</td><td>';
+				str+='<tr><td>durée</td><td>';
 				str+= (sec.duration > 60)? Math.floor(sec.duration / 60) + " min ":"";
 				str+= eval(sec.duration % 60) + " sec ("+sec.duration+" sec)</td></tr>";
 			}
