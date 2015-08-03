@@ -209,7 +209,7 @@ function showJourneyOnMap(jo){
 			/* AFFICHAGE DU MARQUEUR D'ARRIVEE */
 			if (sec.to){
 				coord=eval("sec.to."+sec.to.embedded_type+".coord");
-				sec.to.marker=L.marker([coord.lat, coord.lon], {draggable:'false'}).addTo(map);
+				sec.to.marker=L.marker([coord.lat, coord.lon], {draggable:'true'}).addTo(map);
 				sec.to.marker.bindPopup("<b>"+sec.to.name+"</b>"+
 					"<br />Id: "+sec.to.id+
 					"<br />Type: "+sec.to.embedded_type+
@@ -230,7 +230,7 @@ function showJourneyOnMap(jo){
 			if (sec.stop_date_times){
 				for (sdt_idx in sec.stop_date_times){
 					sdt=sec.stop_date_times[sdt_idx];
-					sdt.marker=L.marker([sdt.stop_point.coord.lat, sdt.stop_point.coord.lon], {draggable:'false'}).addTo(map);
+					sdt.marker=L.marker([sdt.stop_point.coord.lat, sdt.stop_point.coord.lon]).addTo(map);
 					var myDate = IsoToJsDate(sdt.arrival_date_time);
 					sdt.marker.bindPopup("<b>"+sdt.stop_point.name+"</b>"+
 						"<br />Id: "+sdt.stop_point.id+
