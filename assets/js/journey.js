@@ -29,8 +29,8 @@ function clearMap(){
 function getJourneyListHtml(){
 	str="";
 	if (journey.journey_error) {
-		str+="error_id:" + journey.journey_error.id + "<br>";
-		str+="error_message:" + journey.journey_error.message + "<br>";
+		str+="error_id: " + journey.journey_error.id + "<br>";
+		str+="error_message: " + journey.journey_error.message + "<br>";
 	}
 	for (var i in journey.journey_list){
 		str+='<div id="jo'+i+'" class="journey">';
@@ -469,7 +469,14 @@ function getItinerary(){
 	
 	callNavitia(document.getElementById("ws_name").value, url, function(response){
 		journey.journey_list=response.journeys;
-		journey.journey_error=response.error;
+		if (response.message) {
+            journey.journey_error = {
+                'id' : '(aucun id navitia)', 
+                'message' : response.message
+            };
+        } else {
+            journey.journey_error = response.error;
+        }
 		journey.journey_url=response.url;
 		getJourneyListHtml();
 	});
