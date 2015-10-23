@@ -309,7 +309,9 @@ function journey_onLoad() {
 	if (t["time"]) { document.getElementById("time").value=decodeURIComponent(t["time"]);}
 	if (t["min_nb_journeys"]){
 		document.getElementById("min_nb_journeys").value =parseInt(t["min_nb_journeys"]);
-	}
+	} else {
+		document.getElementById("min_nb_journeys").value = 3;
+    }
 	if (t["data_freshness"]){
 		document.getElementById("data_freshness").value=t["data_freshness"];
 	}
