@@ -306,6 +306,9 @@ function journey_onLoad() {
 	if (t["min_nb_journeys"]){
 		document.getElementById("min_nb_journeys").selectedIndex=parseInt(t["min_nb_journeys"])-1;
 	}
+	if (t["data_freshness"]){
+		document.getElementById("data_freshness").value=t["data_freshness"];
+	}
 	if (t["first_section_mode"]){
 		if ( Object.prototype.toString.call( t["first_section_mode"] ) === '[object Array]' ){
 			journey.first_section_mode_list=t["first_section_mode"];
@@ -465,6 +468,11 @@ function getItinerary(){
     custom_scenario = t["custom_scenario"]
     if (custom_scenario) {
         url+="&_override_scenario="+custom_scenario
+    }
+	
+    data_freshness = document.getElementById("data_freshness").value
+    if (data_freshness) {
+        url += "&data_freshness=" + data_freshness
     }
 	
 	callNavitia(document.getElementById("ws_name").value, url, function(response){
