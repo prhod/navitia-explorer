@@ -30,7 +30,15 @@ ptref = function() {
             var names = Object.keys( response );
             if (object.object_type == "") {object.object_type=names[2];}
             object.object_list=eval("response\."+object.object_type);
-            object.disruption_list = response.disruptions;
+
+            //traitement des disruptions
+            var disruptions = [];
+            for (var di in response.disruptions){
+              disruption = response.disruptions[di];
+              disruptions[disruption.id] = disruption;
+            }
+            object.disruption_list = disruptions;
+
             if (response.pagination) {
                 object.object_count = response.pagination.total_result;
             }
@@ -42,7 +50,7 @@ ptref = function() {
 
 function getSeverityIcon(disruption) {
     if (disruption != "") {
-        title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + disruption.messages[0].text; 
+        title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + disruption.messages[0].text;
         if (disruption.severity.effect == "NO_SERVICE"){
             return '<img src="./assets/img/notification_error.png" title="'+title+'" height="20" width="20">';
         } else {
@@ -93,7 +101,7 @@ function getNewURI(changed_uri, keep_current, current_id) {
             new_uri += p.split('=')[0] + "=" + p.split('=')[1]+"&";
         } else {
             if (keep_current) {
-                if (p.endsWith(current_id+'/')) { 
+                if (p.endsWith(current_id+'/')) {
                     new_uri += "uri" + "=" + p.split('=')[1] + changed_uri+"&";
                 } else {
                     new_uri += "uri" + "=" + p.split('=')[1] + current_id + '/' + changed_uri+"&";
@@ -110,12 +118,6 @@ function getNewURI(changed_uri, keep_current, current_id) {
 }
 
 function showNetworksHtml(){
-    disruptions = [];
-    for (var di in ptref.disruption_list){
-        disruption = ptref.disruption_list[di];
-        disruptions[disruption.id] = disruption; 
-    }
-
 	str="";
 	str+='<table><tr>';
 	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
@@ -132,16 +134,16 @@ function showNetworksHtml(){
 		s_str+='<td><a href="'+getNewURI('/commercial_modes/', true, n.id)+'">Modes Co</a></td>';
 		s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lines</a></td>';
 		s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
-        worst_disruption = "";
-        for (var k in n.links){
-            d= n.links[k];
-            //on cherche la severité la plus forte : NO_SERVICE
-            if (d.type == 'disruption') {
-                if ((worst_disruption == "") || (worst_disruption.severity.effect != 'NO_SERVICE')) {
-                    worst_disruption = disruptions[d.id];
-                }
-            }
+		worst_disruption = "";
+    for (var k in n.links){
+      d= n.links[k];
+      //on cherche la severité la plus forte : NO_SERVICE
+      if (d.type == 'disruption') {
+        if ((worst_disruption == "") || (worst_disruption.severity.effect != 'NO_SERVICE')) {
+          worst_disruption = ptref.disruption_list[d.id];
         }
+      }
+    }
 		s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
 		s_str+="</tr>\n";
 		str+=s_str;
@@ -152,12 +154,6 @@ function showNetworksHtml(){
 
 function showTrafficReportsHtml(){
 	str="";
-    disruptions = [];
-    for (var di in ptref.disruption_list){
-        disruption = ptref.disruption_list[di];
-        disruptions[disruption.id] = disruption; 
-    }
-
 	str+='<table><tr>';
 	str+='<th>Network</th>';
 	str+='<th>Line</th>';
@@ -167,33 +163,33 @@ function showTrafficReportsHtml(){
 	str+='<th>Updated</th>';
 	str+='<th>  </th>';
 	str+='</tr>';
-    for (var i in ptref.object_list){
-        //chaque élément contient toutes les perturbations d'un réseau
-		n=ptref.object_list[i];
-        network_id = n.network.id;
-        network_name = n.network.name;
-		
-        for (var j in n.lines) {
-            l=n.lines[j];
-            for (var k in l.links){
-                d=l.links[k];
-                s_str="<tr>";
-                s_str+='<td>'+'<a href="'+getNewURI('/networks/'+ network_id + '/', false)+'" ">'+ network_id + "</a>" + "</td>";
-                s_str+='<td>'+'<a href="'+getNewURI('/lines/'+ l.id + '/', false)+'" ">'+"<span class='icon-ligne' style='background-color: #"+l.color+";'>"+l.code + "</span>" +"</a></td>";
-                s_str+='<td>'+disruptions[d.id].status+'</td>';
-                s_str+='<td>'+disruptions[d.id].application_periods[0].begin+'</td>';
-                s_str+='<td>'+disruptions[d.id].application_periods[0].end+'</td>';
-                s_str+='<td>'+disruptions[d.id].updated_at+'</td>';
-                if (disruptions[d.id].severity.effect = "NO_SERVICE"){
-                    s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+disruptions[d.id].severity.effect+'" height="20" width="20"></td>';
-                } else {
-                    s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+disruptions[d.id].severity.effect+'" height="20" width="20"></td>';
-                }
-                
-                s_str+="</tr>\n";
-                str+=s_str;
-            }
-        }
+	for (var i in ptref.object_list){
+      //chaque élément contient toutes les perturbations d'un réseau
+		  n=ptref.object_list[i];
+      network_id = n.network.id;
+      network_name = n.network.name;
+
+      for (var j in n.lines) {
+          l=n.lines[j];
+          for (var k in l.links){
+              d=l.links[k];
+              s_str="<tr>";
+              s_str+='<td>'+'<a href="'+getNewURI('/networks/'+ network_id + '/', false)+'" ">'+ network_id + "</a>" + "</td>";
+              s_str+='<td>'+'<a href="'+getNewURI('/lines/'+ l.id + '/', false)+'" ">'+"<span class='icon-ligne' style='background-color: #"+l.color+";'>"+l.code + "</span>" +"</a></td>";
+              s_str+='<td>'+ptref.disruption_list[d.id].status+'</td>';
+              s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].begin+'</td>';
+              s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].end+'</td>';
+              s_str+='<td>'+ptref.disruption_list[d.id].updated_at+'</td>';
+              if (ptref.disruption_list[d.id].severity.effect = "NO_SERVICE"){
+                  s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
+              } else {
+                  s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
+              }
+
+              s_str+="</tr>\n";
+              str+=s_str;
+          }
+      }
 	}
 	str+='</table>'
 
@@ -207,29 +203,29 @@ function showTrafficReportsHtml(){
 	str+='<th>  </th>';
 	str+='</tr>';
     for (var i in ptref.object_list){
-        //chaque élément contient toutes les perturbations d'un réseau
-		n=ptref.object_list[i];
-        network_id = n.network.id;
-        network_name = n.network.name;
-		
-        for (var j in n.stop_areas) {
+      //chaque élément contient toutes les perturbations d'un réseau
+      n=ptref.object_list[i];
+      network_id = n.network.id;
+      network_name = n.network.name;
+
+      for (var j in n.stop_areas) {
             sa=n.stop_areas[j];
             for (var k in l.links){
                 d=l.links[k];
                 s_str="<tr>";
                 s_str+='<td>'+'<a href="'+getNewURI('/networks/'+network_id+'/', false)+'" >'+network_id + "</a>" + "</td>";
-//                s_str+='<td>'+network_id + "</td>";
+                // s_str+='<td>'+network_id + "</td>";
                 s_str+='<td>'+'<a href="'+getNewURI('/stop_areas/'+sa.id+'/', false)+'">'+sa.name + "</a></td>";
-                s_str+='<td>'+disruptions[d.id].status+'</td>';
-                s_str+='<td>'+disruptions[d.id].application_periods[0].begin+'</td>';
-                s_str+='<td>'+disruptions[d.id].application_periods[0].end+'</td>';
-                s_str+='<td>'+disruptions[d.id].updated_at+'</td>';
-                if (disruptions[d.id].severity.effect = "NO_SERVICE"){
-                    s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+disruptions[d.id].severity.effect+'" height="20" width="20"></td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].status+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].begin+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].end+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].updated_at+'</td>';
+                if (ptref.disruption_list[d.id].severity.effect = "NO_SERVICE"){
+                    s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
                 } else {
-                    s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+disruptions[d.id].severity.effect+'" height="20" width="20"></td>';
+                    s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
                 }
-                
+
                 s_str+="</tr>\n";
                 str+=s_str;
             }
@@ -261,12 +257,7 @@ function showModesHtml(){
 }
 
 function showStopAreasHtml(){
-    disruptions = [];
-    for (var di in ptref.disruption_list){
-        disruption = ptref.disruption_list[di];
-        disruptions[disruption.id] = disruption; 
-    }
-    newBounds=[];
+  newBounds=[];
 	str="";
 	str+='<table><tr>';
 	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
@@ -294,16 +285,16 @@ function showStopAreasHtml(){
 		s_str+='<td><a href="'+getNewURI('/departures/', true, n.id)+'">Depart.</a></td>';
 		s_str+='<td><a href="stop_schedules.html?ws_name='+ws_name+'&coverage='+coverage+'&stop_area_id='+n.id+'">Horaires</a></td>';
 		s_str+='<td><a href="'+getNewURI('/places_nearby/', true, n.id)+'">Nearby</a></td>';
-        worst_disruption = "";
-        for (var k in n.links){
-            d= n.links[k];
-            //on cherche la severité la plus forte : NO_SERVICE
-            if (d.type == 'disruption') {
-                if ((worst_disruption == "") || (worst_disruption.severity.effect != 'NO_SERVICE')) {
-                    worst_disruption = disruptions[d.id];
-                }
+    worst_disruption = "";
+    for (var k in n.links){
+        d= n.links[k];
+        //on cherche la severité la plus forte : NO_SERVICE
+        if (d.type == 'disruption') {
+            if ((worst_disruption == "") || (worst_disruption.severity.effect != 'NO_SERVICE')) {
+                worst_disruption = ptref.disruption_list[d.id];
             }
         }
+    }
         s_str+="</tr>\n";
 		str+=s_str;
 		coord=n.coord;
@@ -311,7 +302,7 @@ function showStopAreasHtml(){
 		lamb=WGS_ED50(coord.lon, coord.lat);
 		try {
 			s_city=n.administrative_regions[0].name;
-		} 
+		}
 		catch (err) {
 			s_city="no_city";
 		}
@@ -590,11 +581,6 @@ function showConnectionsHtml(){
 }
 
 function showLinesHtml(){
-    disruptions = [];
-    for (var di in ptref.disruption_list){
-        disruption = ptref.disruption_list[di];
-        disruptions[disruption.id] = disruption; 
-    }
 	str="";
 	str+='<table><tr>';
 	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
@@ -620,7 +606,7 @@ function showLinesHtml(){
             //on cherche la severité la plus forte : NO_SERVICE
             if (d.type == 'disruption') {
                 if ((worst_disruption == "") || (worst_disruption.severity.effect != 'NO_SERVICE')) {
-                    worst_disruption = disruptions[d.id];
+                    worst_disruption = ptref.disruption_list[d.id];
                 }
             }
         }
@@ -782,7 +768,6 @@ function ptref_onLoad(){
 	var overlayMaps = {};
 	L.control.layers(baseMaps, overlayMaps).addTo(map);
 	L.control.scale().addTo(map);
-	
 	map.on('click', onMapClick);
 }
 
