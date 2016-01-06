@@ -17,7 +17,7 @@ How to install on Ubuntu
 ------------------------
 From a scratch installation of Ubuntu this is one possibility (not the only one):
 * Clone the project where you want to work (`git clone`)
-* Install `apache2`, `php5` and `libapache2-mod-php5` (`sudo apt-get install apache2 php5 libapache2-mod-php5`)
+* Install `apache2`, `php5`,`php5-curl` and `libapache2-mod-php5` (`sudo apt-get install apache2 php5 php5-curl libapache2-mod-php5`)
 * Create a symbolic link of the project in `/var/www/html/` (`ln -sf /complete/path/to/navitia-explorer /var/www/html/navitia-explorer`)
 * In the root of you project, create and edit `params.json` (`cp params.default.json params.json`)
 * One might have to restart apache (`sudo service apache2 restart`)
