@@ -50,7 +50,7 @@ ptref = function() {
 
 function getSeverityIcon(disruption) {
     if (disruption != "") {
-        title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + disruption.messages[0].text;
+        title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + (disruption.messages ? disruption.messages[0].text : "") ;
         if (disruption.severity.effect == "NO_SERVICE"){
             return '<img src="./assets/img/notification_error.png" title="'+title+'" height="20" width="20">';
         } else {
