@@ -621,6 +621,7 @@ function ptref_onLoad(){
 	};
 	var overlayMaps = {};
 	L.control.layers(baseMaps, overlayMaps).addTo(map);
+	L.control.scale().addTo(map);
 	
 	map.on('click', onMapClick);
 }

@@ -365,6 +365,7 @@ function journey_onLoad() {
 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(map);
 	map.on('click', onMapClick);
+	L.control.scale().addTo(map);
 
 	shortcut.add("F9",function() {
 		search();

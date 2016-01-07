@@ -19,6 +19,7 @@ function places_onLoad() {
 		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(map);
 	map.on('click', onMapClick);
+	L.control.scale().addTo(map);
 
 	if (t["distance_reference"]){
 		var myIcon = L.icon({
