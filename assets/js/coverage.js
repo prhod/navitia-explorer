@@ -19,18 +19,18 @@ function sort_compare_coverage(cov1, cov2){
 	return cov1.id.localeCompare(cov2.id);
 }
 
-function print_coveragelist(cov_list){
+function print_coveragelist_status(cov_list){
 	selected_region=""
 	var now = new Date();
 	str="<table border='1px'>";
-	str+="<tr><th></th><th>Region</th><th>Status</th><th>Production Start</th><th>Production End</th></tr>";
+	str+="<tr><th></th><th>Region</th><th>Status</th><th>Production Start</th><th>Production End</th><th>Publication Date</th><th>Last Load</th></tr>";
 	for (var i in cov_list){
 		r=cov_list[i];
 		var myDate = r.end_production_date?IsoToJsDate(r.end_production_date):now;
 		//alert(myDate);
 		str+="<tr>";
 		str+="<td><input type='radio' name='selectedregion' id='selectedregion' onclick='focusRegion(\""+r.id+"\")'></td>";
-		str+="<td>" + r.id+"</td>";
+		str+="<td>" + r.region_id+"</td>";
 		str+="<td>" + r.status+"</td>";
 		str+="<td>" + r.start_production_date+"</td>";
 		str+="<td>";
@@ -45,25 +45,45 @@ function print_coveragelist(cov_list){
 			}
 		}
 		str+="</td>";
+        str+="<td>" + NavitiaDateTimeToString(r.publication_date, 'yyyymmdd hh:nn') +"</td>";
+        str+="<td>" + NavitiaDateTimeToString(r.last_load_at, 'yyyymmdd hh:nn') +"</td>";
 		str+="</tr>";
 	}
 	str+="</table>"
 	document.getElementById('div_coverage').innerHTML=str;
-	showOnMap();
+    get_shapes_and_show_on_map();
 }
 
-
+function get_shapes_and_show_on_map(){
+	callNavitiaJS(ws_name, 'coverage', '', function(response){
+		coverages2 = response.regions;
+        for (c1 in coverages){
+            shape = null;
+            for (c2 in coverages2){
+                if (coverages[c1].region_id == coverages2[c2].id){
+                    shape = coverages2[c2].shape;
+                    break;
+                }
+            }
+            coverages[c1].shape = shape;
+        }
+		show_coveragelist_on_map();
+	});
+}
+    
 function coverage_onLoad() {
 	menu.show_menu("menu_div");
 	t=extractUrlParams();
 	ws_name = (t["ws_name"])?t["ws_name"]:"";
 	coverage = (t["coverage"])?t["coverage"]:"";
-	callNavitiaJS(ws_name, 'coverage', '', function(response){
+	callNavitiaJS(ws_name, 'status', '', function(response){
 		coverages = response.regions;
+        for (c1 in coverages){
+            coverages[c1].id = coverages[c1].region_id; //harmonisation des identifiants entre /status et /coverage
+        }
 		coverages.sort(sort_compare_coverage);
-		print_coveragelist(coverages);
+		print_coveragelist_status(coverages);
 	});
-	
 }
         
 
@@ -77,7 +97,7 @@ function focusRegion(region_id){
 	}
 }	
 
-function showOnMap(region_id){
+function show_coveragelist_on_map(region_id){
 	for (var i in map_polygons){map.removeLayer(map_polygons[i]);}
 	map_polygons=[];
 	selectedBounds = false;

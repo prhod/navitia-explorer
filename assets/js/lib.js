@@ -207,6 +207,11 @@ var formatDate = function (formatDate, formatString) {
 	}
 }
 
+function NavitiaDateTimeToString(sDateTime, formatString){
+    d = IsoToJsDate(sDateTime);
+    return formatDate(d, formatString);
+}
+
 function IsoToJsDate(chaine){
 	//20140302T120600 
 	//var d = new Date(year, month, day, hours, minutes, seconds, milliseconds); 
