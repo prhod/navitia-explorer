@@ -2,7 +2,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<link type="text/css" href="global.css" rel="stylesheet" />
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+	<link rel="stylesheet" href="./assets/css/easy-button.css" />
 </head>
 <body onload="coverage_onLoad();">
 	<form id="form1">
@@ -15,7 +16,7 @@
 			<div id="result" style="width:100%">
 				<table style="width:100%; height:400px">
 					<tr>
-						<td width="50%" valign="top"><div id="div_coverage"></div></td>
+						<td width="50%" valign="top"><div id="div_coverage" style="max-height : 500px; overflow-y: scroll;"></div></td>
 						<td><div id="map" style="height: 100%"></div></td>
 					</tr>
 				</table>
@@ -28,10 +29,12 @@
 		<a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
 		<a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
 	</div>    
+    <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
     <script src="./assets/js/jquery-1.11.0.min.js"></script>
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script type="text/javascript" src="./assets/js/menu.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+	<script type="text/javascript" src="./assets/js/easy-button.js"></script>
 	<script type="text/javascript" src="./assets/js/lib.js"></script>
+	<script type="text/javascript" src="./assets/js/menu.js"></script>
 	<script type="text/javascript" src="./assets/js/conversion.js"></script>
 	<script type="text/javascript" src="./assets/js/coverage.js"></script>
 </body>

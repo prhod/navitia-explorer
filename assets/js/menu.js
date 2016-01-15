@@ -83,7 +83,7 @@ menu.show_menu = function(container) {
 			//on affiche la liste des coverage
 			str+="<div id='coverage_list'><select id='coverage'><option>"+coverage+"</option></select></div>";
 			document.getElementById(container).innerHTML=str;
-			callNavitia(ws_name, 'coverage', function(response){
+			callNavitiaJS(ws_name, 'coverage', '', function(response){
 				response.regions.sort(sort_compare_coverage);
 				var str="<select name='coverage' id='coverage' onchange='document.forms[0].submit();'>"
 				for (var i in response.regions) {
