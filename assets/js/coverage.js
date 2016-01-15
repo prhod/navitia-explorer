@@ -55,15 +55,10 @@ function print_coveragelist(cov_list){
 
 function coverage_onLoad() {
 	menu.show_menu("menu_div");
-
 	t=extractUrlParams();
 	ws_name = (t["ws_name"])?t["ws_name"]:"";
 	coverage = (t["coverage"])?t["coverage"]:"";
-	
-	//coverage = new Coverage();
-	//coverage.load_coverage(print_coveragelist);
-	
-	callNavitia(ws_name, 'coverage', function(response){
+	callNavitiaJS(ws_name, 'coverage', '', function(response){
 		coverages = response.regions;
 		coverages.sort(sort_compare_coverage);
 		print_coveragelist(coverages);

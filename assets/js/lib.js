@@ -92,6 +92,39 @@ function callNavitia(ws_name, url, callBack){
 	http.send(null);
 }
 
+function callNavitiaJS_withoutParams(ws_name, service_url, forced_token, callBack){
+    $.getJSON('./params.json', function(params) {
+        ws_name = (ws_name == "") ? params.default.environnement : ws_name;
+        console.log(params.environnements[ws_name]);
+        base_url = params.environnements[ws_name].url;
+        if (forced_token != "") {
+            callNavitiaJS_withParams(forced_token, base_url + service_url, callBack);
+        } else {
+            callNavitiaJS_withParams(params.environnements[ws_name].key, base_url + service_url, callBack);
+        }
+    });
+}
+
+function callNavitiaJS_withParams(token, url, callBack){
+    console.log(url);
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
+    });
+
+    $.ajax({
+        url: url,
+        context: document.body
+    }).success(function(data) {
+        callBack(data);
+    });
+
+}
+
+function callNavitiaJS(ws_name, service_url, forced_token, callBack){
+    callNavitiaJS_withoutParams(ws_name, service_url, forced_token, callBack);
+}
+
+
 function callObjectFunction(ws_name, url, object, callBack){
 	var http = createRequestObject();
 	cible="./navitia.php?ws_name="+ws_name+"&ress="+url
