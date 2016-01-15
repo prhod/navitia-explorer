@@ -42,6 +42,11 @@ ul li a:hover {
   font-weight: bold;
 }
 
+.span_link {    
+  color: blue;
+  text-decoration:underline;
+  cursor: pointer;
+}
 
 /*styles pour la page journeys*/
 .journey {

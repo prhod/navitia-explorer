@@ -208,6 +208,7 @@ var formatDate = function (formatDate, formatString) {
 }
 
 function NavitiaDateTimeToString(sDateTime, formatString){
+    if (sDateTime == "not-a-date-time") {return "Na"}
     d = IsoToJsDate(sDateTime);
     return formatDate(d, formatString);
 }
