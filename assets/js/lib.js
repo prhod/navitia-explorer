@@ -104,6 +104,48 @@ function callNavitiaJS(ws_name, service_url, forced_token, callBack){
     });
 }
 
+getAutoComplete = function (request, response) {
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
+    });
+
+    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?"
+    $.ajax({
+        url: complete_url,
+        dataType: "json",
+        data: { q: request.term },
+        success: function( data ) {
+            ListData = [];
+            for (var i = 0; i < data['places'].length; i++) {
+                //ListData.push(data['places'][i]['name'])
+                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            }
+            response(ListData);
+        }
+    });
+}
+
+getAutoComplete_StopArea = function (request, response) {
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
+    });
+
+    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?type[]=stop_area"
+    $.ajax({
+        url: complete_url,
+        dataType: "json",
+        data: { q: request.term },
+        success: function( data ) {
+            ListData = [];
+            for (var i = 0; i < data['places'].length; i++) {
+                //ListData.push(data['places'][i]['name'])
+                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            }
+            response(ListData);
+        }
+    });
+}
+
 function callNavitiaJS_withParams(token, url, callBack){
     $.ajaxSetup( {
         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
@@ -111,29 +153,15 @@ function callNavitiaJS_withParams(token, url, callBack){
 
     $.ajax({
         url: url,
-        context: document.body
-    }).success(function(data) {
-        callBack(data);
+        context: document.body,
+        success: function(data) {
+            callBack(data);
+        },
+        error: function(data){
+            callBack(validateJSON(data.responseText));
+        }
     });
 
-}
-
-
-function callObjectFunction(ws_name, url, object, callBack){
-	var http = createRequestObject();
-	cible="./navitia.php?ws_name="+ws_name+"&ress="+url
-	http.open('GET', cible, true);
-	http.onreadystatechange = (function () {
-	  if (http.readyState == 4)
-	  {
-		if (http.status == 200)
-		{
-		  var response = validateJSON(http.responseText);
-		  return callBack(object, response);
-		}
-	  }
-	});
-	http.send(null);
 }
 
 function sleep(milliseconds) {

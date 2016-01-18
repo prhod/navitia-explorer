@@ -27,7 +27,7 @@ function getStopSchedules(){
 		for (forbid in forbidden_id) {
 			url += "&forbidden_id[]=" + forbidden_id[forbid];
 		}
-		callNavitia(ws_name, url, function(response){
+		callNavitiaJS(ws_name, url, '', function(response){
 			if (response.stop_schedules) {
 				schedules = response.stop_schedules; 
 				show_schedules_html();
@@ -149,26 +149,10 @@ function init_date(sdate, sheure){
 	document.getElementById("heure").value=r_heure;
 }
 
+
 $(document).ready(function(){
     $( "#stop_area_name" ).autocomplete({
-        source: function( request, response) {
-            $.ajax({
-                url: "./navitia.php" + '?ws_name=' + document.getElementById("ws_name").value +"&ress=coverage/" + 
-                    document.getElementById("coverage").value+"/places?type[]=stop_area",
-                dataType: "json",
-                data: {
-                q: request.term
-                },
-                success: function( data ) {
-                    ListData = [];
-                    for (var i = 0; i < data['places'].length; i++) {
-                        //ListData.push(data['places'][i]['name'])
-                        ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
-                    }
-                    response(ListData);
-                }
-            });
-        },
+        source: getAutoComplete_StopArea,
         minLength: 3,
         select: function(event, ui){
             document.getElementById("stop_area_id").value = ui.item.id;

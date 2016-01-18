@@ -56,7 +56,7 @@ function getPlacesNearby(uri, distance){
 		for (obj in this.object_types) {
 		    url += "&type[]=" + this.object_types[obj];
 		}
-		callNavitia(ws_name, url, function(response){
+		callNavitiaJS(ws_name, url, '', function(response){
 			if (response.places_nearby) {
 				places_nearby = response.places_nearby; 
 				show_places_html();
@@ -88,27 +88,7 @@ function places_nearby_onLoad(){
 
 $(document).ready(function(){
     $( "#point_name" ).autocomplete({
-        source: function( request, response) {
-            $.ajax({
-                url: "./navitia.php" + '?ws_name=' + document.getElementById("ws_name").value +"&ress=coverage/" + 
-                    document.getElementById("coverage").value+"/places?",
-                dataType: "json",
-                data: {
-                q: request.term
-                },
-                success: function( data ) {
-                    ListData = [];
-                    for (var i = 0; i < data['places'].length; i++) {
-                        //ListData.push(data['places'][i]['name'])
-                        ListData.push({
-							"id": data['places'][i]['id'], 
-							"value": "[" + data['places'][i]['embedded_type'] + "] " +data['places'][i]['name']
-						})
-                    }
-                    response(ListData);
-                }
-            });
-        },
+        source: getAutoComplete,
         minLength: 3,
         select: function(event, ui){
             document.getElementById("point_id").value = ui.item.id;

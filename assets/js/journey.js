@@ -483,7 +483,7 @@ function getItinerary(){
         url += "&data_freshness=" + data_freshness
     }
 	
-	callNavitia(document.getElementById("ws_name").value, url, function(response){
+	callNavitiaJS(document.getElementById("ws_name").value, url, '', function(response){
 		journey.journey_list=response.journeys;
 		if (response.message) {
             journey.journey_error = {
@@ -530,3 +530,23 @@ var map;
 var popup = L.popup();
 var journey = new Journey();
 
+$(document).ready(function(){
+
+/* Départ*/
+    $( "#from_text" ).autocomplete({
+        source: getAutoComplete,
+        minLength: 3,
+        select: function(event, ui){
+            document.getElementById("from").value = ui.item.id;
+        }
+   });
+   
+/* Arrivée */
+   $( "#to_text" ).autocomplete({
+		source: getAutoComplete,
+        minLength: 3,
+		select: function(event, ui){
+			document.getElementById("to").value = ui.item.id;
+		}
+	});
+});

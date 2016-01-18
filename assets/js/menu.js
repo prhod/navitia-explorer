@@ -45,7 +45,8 @@ menu.show_menu = function(container) {
 	t=extractUrlParams();
 	ws_name = (t["ws_name"])?t["ws_name"]:"";
 	coverage = (t["coverage"])?t["coverage"]:"";
-	if ( (ws_name=="") || (coverage=="") ) {
+	token = (t["token"])?t["token"]:"";
+	if ( (ws_name=="") || (coverage=="")) {
 		$.getJSON('./params.json', function(params) {
 			ws_name = (ws_name == "") ? params.default.environnement : ws_name;
 			coverage = (coverage == "") ? params.default.coverage : coverage;				
@@ -63,6 +64,9 @@ menu.show_menu = function(container) {
 		document.getElementById(container).innerHTML=str;
 		$.getJSON('./params.json', function(params) {
 			str="";
+			token = (token == "") ? params.environnements[ws_name].key : token;				
+			str += "<input type='hidden' name='token' id='token' value='"+token+"' />";
+			str += "<input type='hidden' name='navitia_api' id='navitia_api' value='"+params.environnements[ws_name].url+"' />";
 			str+="<ul  class='title nav navbar-nav'>";
 			for (var i in menu.page_list){
 				url=menu.page_list[i].name+".html?ws_name="+ws_name+"&coverage="+coverage;

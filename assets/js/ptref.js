@@ -25,11 +25,11 @@ ptref = function() {
 				}
 			}
 		}
-		callObjectFunction(ws_name, navitia_call, this, function(object, response){
-			object.response = response;
+        callNavitiaJS(ws_name, navitia_call, '', function(response){
+			ptref.response = response;
 			var names = Object.keys( response );
-			if (object.object_type == "") {object.object_type=names[2];}
-			object.object_list=eval("response\."+object.object_type);
+			if (ptref.object_type == "") {ptref.object_type=names[2];}
+			ptref.object_list=eval("response\."+ptref.object_type);
 
 			//traitement des disruptions
 			var disruptions = [];
@@ -37,13 +37,13 @@ ptref = function() {
 				disruption = response.disruptions[di];
 				disruptions[disruption.id] = disruption;
 			}
-			object.disruption_list = disruptions;
+			ptref.disruption_list = disruptions;
 
 			if (response.pagination) {
-				object.object_count = response.pagination.total_result;
+				ptref.object_count = response.pagination.total_result;
 			}
-			if (response.error) { object.object_type = "error";}
-			call_back(object);
+			if (response.error) { ptref.object_type = "error";}
+			call_back(ptref);
 		});
 	}
 }

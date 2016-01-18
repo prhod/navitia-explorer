@@ -65,7 +65,7 @@ function doSearch(){
 	if (document.getElementById('address').checked) {
 		url+= encodeURI("&type[]=address");
 	}
-	callNavitia(document.getElementById("ws_name").value, url, showPlaces);
+	callNavitiaJS(document.getElementById("ws_name").value, url, '', showPlaces);
 }
 
 function showPlaces(response){
