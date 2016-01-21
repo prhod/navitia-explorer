@@ -289,7 +289,6 @@ function showModesHtml(){
 		s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
 		s_str+="</tr>\n";
 		str+=s_str;
-		console.log(s_str);
 	}
 	str+='</table>'
 	document.getElementById('ptref_content').innerHTML=str;

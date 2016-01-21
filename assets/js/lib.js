@@ -15,6 +15,8 @@ function extractUrlParams () {
 		x[1]=x[1].replace(/\%3A/g, ":");
 		x[1]=x[1].replace(/\%3B/g, ";");
 		x[1]=x[1].replace(/\%2F/g, "/");
+		x[1]=x[1].replace(/\%3D/g, "=");
+		x[1]=x[1].replace(/\%26/g, "&");
 		if (!f[x[0]]) f[x[0]]=x[1];
 		else {
 		    if (!( Object.prototype.toString.call( f[x[0]] ) === '[object Array]' )) {

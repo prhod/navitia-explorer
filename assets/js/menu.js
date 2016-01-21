@@ -67,7 +67,9 @@ menu.show_menu = function(container) {
 			token = (token == "") ? params.environnements[ws_name].key : token;				
 			str += "<input type='hidden' name='token' id='token' value='"+token+"' />";
 			str += "<input type='hidden' name='navitia_api' id='navitia_api' value='"+params.environnements[ws_name].url+"' />";
-			str+="<ul  class='title nav navbar-nav'>";
+			document.getElementById("params_div").innerHTML = str;
+            str = "";
+            str+="<ul  class='title nav navbar-nav'>";
 			for (var i in menu.page_list){
 				url=menu.page_list[i].name+".html?ws_name="+ws_name+"&coverage="+coverage;
 				str+="<li class='title'>"+"<a class='title' href='"+url+"'>" +menu.page_list[i].title + "</a>";
