@@ -60,48 +60,45 @@ function validateJSON(jsonText)
            && eval('(' + jsonText + ')');
 } // validateJSON(jsonText)
 
-function callUrl(url, callBack){
-	var http = createRequestObject();
-
-	http.open('GET', url, true);
-	http.onreadystatechange = (function () {
-	  if (http.readyState == 4)
-	  {
-		if (http.status == 200)
-		{
-		  return callBack(http.responseText);
-		}
-	  }
-	});
-	http.send(null);
-}
-
-function callNavitia(ws_name, url, callBack){
-	var http = createRequestObject();
-	cible="./navitia.php?ws_name="+ws_name+"&ress="+url
-
-	http.open('GET', cible, true);
-	http.onreadystatechange = (function () {
-	  if (http.readyState == 4)
-	  {
-		if (http.status == 200)
-		{
-		  var response = validateJSON(http.responseText);
-		  return callBack(response);
-		}
-	  }
-	});
-	http.send(null);
-}
 
 function callNavitiaJS(ws_name, service_url, forced_token, callBack){
     $.getJSON('./params.json', function(params) {
         ws_name = (ws_name == "") ? params.default.environnement : ws_name;
         base_url = params.environnements[ws_name].url;
         if (forced_token != "") {
-            callNavitiaJS_withParams(forced_token, base_url + service_url, callBack);
+            callApiJS_withParams(forced_token, base_url + service_url, callBack);
         } else {
-            callNavitiaJS_withParams(params.environnements[ws_name].key, base_url + service_url, callBack);
+            callApiJS_withParams(params.environnements[ws_name].key, base_url + service_url, callBack);
+        }
+    });
+}
+
+function callTyrJS(ws_name, service_url, callBack){
+    $.getJSON('./params.json', function(params) {
+        ws_name = (ws_name == "") ? params.default.environnement : ws_name;
+        base_url = params.environnements[ws_name].tyr;
+        callApiJS_withParams('', base_url + service_url, callBack);
+    });
+}
+
+function callApiJS_withParams(token, url, callBack){
+    if (token != '') {
+        $.ajaxSetup( {
+            beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
+        });
+    }
+
+    $.ajax({
+        url: url,
+        context: document.body,
+        success: function(data) {
+            data.url = url;
+            callBack(data);
+        },
+        error: function(data){
+            result = validateJSON(data.responseText);
+            result.url = url;
+            callBack(result);
         }
     });
 }
@@ -146,27 +143,6 @@ getAutoComplete_StopArea = function (request, response) {
             response(ListData);
         }
     });
-}
-
-function callNavitiaJS_withParams(token, url, callBack){
-    $.ajaxSetup( {
-        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
-    });
-
-    $.ajax({
-        url: url,
-        context: document.body,
-        success: function(data) {
-            data.url = url;
-            callBack(data);
-        },
-        error: function(data){
-            result = validateJSON(data.responseText);
-            result.url = url;
-            callBack(result);
-        }
-    });
-
 }
 
 function sleep(milliseconds) {
