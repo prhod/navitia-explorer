@@ -30,7 +30,7 @@ function init_date(sdate, sheure){
 }
 
 function getNetworkSelect(){
-	callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/?count=1000', function(response){
+	callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/?count=1000', '', function(response){
 		first_id = "";
 		selected_exists = false;
 		var str="<select name='network_id' id='network_id' onchange='document.forms[0].submit()'>"
@@ -58,26 +58,28 @@ function getLineSelect(){
 	if (t["network_id"]) {
 		first_id = "";
 		selected_exists = false;
-		callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/?count=1000', function(response){
-			var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
-			for (var n in response.lines) {
-				var line = response.lines[n];
-				if (first_id == "") {first_id = line.id;}
-				selected = "";
-				if ((t["line_id"]) && (t["line_id"]==line.id)) {
-					selected_exists = true;
-					selected = " selected ";
-				}
-				str+= "<option " + selected+ " value='"+line.id+"'>" + line.code + ' - ' + line.name + "</option>";
-			}
-			str+="</select>";
-			document.getElementById("line_div").innerHTML=str;
-			if ( (!t["line_id"]) || (!selected_exists) ){
-				//si aucune ligne selectionné : on prend la 1ere et on relance la selection de la route
-				t["line_id"] = first_id;
-				getRouteSelect();
-			}
-		});
+		callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/?count=1000', '', 
+            function(response){
+                var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
+                for (var n in response.lines) {
+                    var line = response.lines[n];
+                    if (first_id == "") {first_id = line.id;}
+                    selected = "";
+                    if ((t["line_id"]) && (t["line_id"]==line.id)) {
+                        selected_exists = true;
+                        selected = " selected ";
+                    }
+                    str+= "<option " + selected+ " value='"+line.id+"'>" + line.code + ' - ' + line.name + "</option>";
+                }
+                str+="</select>";
+                document.getElementById("line_div").innerHTML=str;
+                if ( (!t["line_id"]) || (!selected_exists) ){
+                    //si aucune ligne selectionné : on prend la 1ere et on relance la selection de la route
+                    t["line_id"] = first_id;
+                    getRouteSelect();
+                }
+            }
+        );
 	}
 }
 
@@ -85,26 +87,28 @@ function getRouteSelect(){
 	if (t["line_id"]) {
 		first_id = ""
 		selected_exists = false;
-		callNavitia(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/' + t["line_id"] + '/routes/?count=1000', function(response){
-			var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
-			for (var n in response.routes) {
-				var route = response.routes[n];
-				if (first_id == "") {first_id = route.id;}
-				selected = "";
-				if ((t["route_id"]) && (t["route_id"]==route.id)) {
-					selected_exists = true;
-					selected = " selected ";
-				}
-				str+= "<option " + selected+ " value='"+route.id+"'>" + route.name + "</option>";
-			}
-			str+="</select>";
-			document.getElementById("route_div").innerHTML=str;
-			if ( (!t["route_id"]) || (!selected_exists) ){
-				//si aucun parcours selectionné : on prend le 1er et on relance l'affichage de la grille
-				t["route_id"] = first_id;
-				getRouteSchedule();
-			}
-		});
+		callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/' + t["line_id"] + '/routes/?count=1000', '', 
+            function(response){
+                var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
+                for (var n in response.routes) {
+                    var route = response.routes[n];
+                    if (first_id == "") {first_id = route.id;}
+                    selected = "";
+                    if ((t["route_id"]) && (t["route_id"]==route.id)) {
+                        selected_exists = true;
+                        selected = " selected ";
+                    }
+                    str+= "<option " + selected+ " value='"+route.id+"'>" + route.name + "</option>";
+                }
+                str+="</select>";
+                document.getElementById("route_div").innerHTML=str;
+                if ( (!t["route_id"]) || (!selected_exists) ){
+                    //si aucun parcours selectionné : on prend le 1er et on relance l'affichage de la grille
+                    t["route_id"] = first_id;
+                    getRouteSchedule();
+                }
+            }
+        );
 	}
 }
 
@@ -113,7 +117,7 @@ function getRouteSchedule(){
 	url+="?from_datetime=" + natural_str_to_iso(
 		document.getElementById("date").value, 
 		document.getElementById("heure").value);
-	callNavitia(ws_name, url, function(response){
+	callNavitiaJS(ws_name, url, '', function(response){
 		if (response.route_schedules) {
 			schedule = response.route_schedules[0]; //1 seule grille sur un parcours
 			show_schedule_html();

@@ -15,6 +15,8 @@ function extractUrlParams () {
 		x[1]=x[1].replace(/\%3A/g, ":");
 		x[1]=x[1].replace(/\%3B/g, ";");
 		x[1]=x[1].replace(/\%2F/g, "/");
+		x[1]=x[1].replace(/\%3D/g, "=");
+		x[1]=x[1].replace(/\%26/g, "&");
 		if (!f[x[0]]) f[x[0]]=x[1];
 		else {
 		    if (!( Object.prototype.toString.call( f[x[0]] ) === '[object Array]' )) {
@@ -104,6 +106,48 @@ function callNavitiaJS(ws_name, service_url, forced_token, callBack){
     });
 }
 
+getAutoComplete = function (request, response) {
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
+    });
+
+    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?"
+    $.ajax({
+        url: complete_url,
+        dataType: "json",
+        data: { q: request.term },
+        success: function( data ) {
+            ListData = [];
+            for (var i = 0; i < data['places'].length; i++) {
+                //ListData.push(data['places'][i]['name'])
+                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            }
+            response(ListData);
+        }
+    });
+}
+
+getAutoComplete_StopArea = function (request, response) {
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
+    });
+
+    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?type[]=stop_area"
+    $.ajax({
+        url: complete_url,
+        dataType: "json",
+        data: { q: request.term },
+        success: function( data ) {
+            ListData = [];
+            for (var i = 0; i < data['places'].length; i++) {
+                //ListData.push(data['places'][i]['name'])
+                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            }
+            response(ListData);
+        }
+    });
+}
+
 function callNavitiaJS_withParams(token, url, callBack){
     $.ajaxSetup( {
         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
@@ -111,29 +155,18 @@ function callNavitiaJS_withParams(token, url, callBack){
 
     $.ajax({
         url: url,
-        context: document.body
-    }).success(function(data) {
-        callBack(data);
+        context: document.body,
+        success: function(data) {
+            data.url = url;
+            callBack(data);
+        },
+        error: function(data){
+            result = validateJSON(data.responseText);
+            result.url = url;
+            callBack(result);
+        }
     });
 
-}
-
-
-function callObjectFunction(ws_name, url, object, callBack){
-	var http = createRequestObject();
-	cible="./navitia.php?ws_name="+ws_name+"&ress="+url
-	http.open('GET', cible, true);
-	http.onreadystatechange = (function () {
-	  if (http.readyState == 4)
-	  {
-		if (http.status == 200)
-		{
-		  var response = validateJSON(http.responseText);
-		  return callBack(object, response);
-		}
-	  }
-	});
-	http.send(null);
 }
 
 function sleep(milliseconds) {
