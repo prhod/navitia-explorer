@@ -62,8 +62,7 @@ function tyr_onLoad() {
 
 	t=extractUrlParams();
     //ne fonctionne pas avec Tyr.
-	//callNavitiaJS(t["ws_name"], "tyr/"+t["coverage"], '', print_tyr_job_list);
-	callNavitia(t["ws_name"], "tyr/"+t["coverage"], print_tyr_job_list);
+	callTyrJS(t["ws_name"], "jobs/"+t["coverage"], print_tyr_job_list);
 }
 
 
