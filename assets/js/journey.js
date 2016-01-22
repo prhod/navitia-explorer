@@ -493,7 +493,7 @@ function getItinerary(){
         } else {
             journey.journey_error = response.error;
         }
-		journey.journey_url=response.url;
+		journey.journey_url = response.url;
 		getJourneyListHtml();
 	});
 }

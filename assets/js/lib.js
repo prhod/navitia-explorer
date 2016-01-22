@@ -157,10 +157,13 @@ function callNavitiaJS_withParams(token, url, callBack){
         url: url,
         context: document.body,
         success: function(data) {
+            data.url = url;
             callBack(data);
         },
         error: function(data){
-            callBack(validateJSON(data.responseText));
+            result = validateJSON(data.responseText);
+            result.url = url;
+            callBack(result);
         }
     });
 
