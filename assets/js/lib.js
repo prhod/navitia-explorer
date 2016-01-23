@@ -1,42 +1,42 @@
 String.prototype.endsWith = function(suffix) {
-	//console.log("suffix : " + suffix);
-	//console.log("suffix length : " + suffix.length);
+    //console.log("suffix : " + suffix);
+    //console.log("suffix length : " + suffix.length);
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
 function extractUrlParams () {
-	var t = location.search.substring(1).split('&');
-	var f = [];
-	for (var i=0; i<t.length; i++){
-		var x = t[ i ].split('=');
-		x[1]=decodeURI(x[1]);
-		x[1]=x[1].replace(/\+/g, " ");
-		x[1]=x[1].replace(/\"/g, "");
-		x[1]=x[1].replace(/\%3A/g, ":");
-		x[1]=x[1].replace(/\%3B/g, ";");
-		x[1]=x[1].replace(/\%2F/g, "/");
-		x[1]=x[1].replace(/\%3D/g, "=");
-		x[1]=x[1].replace(/\%26/g, "&");
-		if (!f[x[0]]) f[x[0]]=x[1];
-		else {
-		    if (!( Object.prototype.toString.call( f[x[0]] ) === '[object Array]' )) {
-		        //il faut transormer la variable en tableau
-		        tmp=f[x[0]];
-		        f[x[0]]= new Array();
-		        f[x[0]].push(tmp);
-		    }
+    var t = location.search.substring(1).split('&');
+    var f = [];
+    for (var i=0; i<t.length; i++){
+        var x = t[ i ].split('=');
+        x[1]=decodeURI(x[1]);
+        x[1]=x[1].replace(/\+/g, " ");
+        x[1]=x[1].replace(/\"/g, "");
+        x[1]=x[1].replace(/\%3A/g, ":");
+        x[1]=x[1].replace(/\%3B/g, ";");
+        x[1]=x[1].replace(/\%2F/g, "/");
+        x[1]=x[1].replace(/\%3D/g, "=");
+        x[1]=x[1].replace(/\%26/g, "&");
+        if (!f[x[0]]) f[x[0]]=x[1];
+        else {
+            if (!( Object.prototype.toString.call( f[x[0]] ) === '[object Array]' )) {
+                //il faut transormer la variable en tableau
+                tmp=f[x[0]];
+                f[x[0]]= new Array();
+                f[x[0]].push(tmp);
+            }
             f[x[0]].push(x[1]);
-		}
-	}
-	return f;
+        }
+    }
+    return f;
 }
 
 function getUrlParams(){
-	t=extractUrlParams();
-	if (t["region"]) {
-		params.region=t["region"];
-	}
-	return t;
+    t=extractUrlParams();
+    if (t["region"]) {
+        params.region=t["region"];
+    }
+    return t;
 }
 
 function createRequestObject()
@@ -165,55 +165,55 @@ function natural_str_to_iso(date, time) {
 }
 
 function strtodatetime(str){
-	//20140217T134500
-	//new Date(year, month, day, hours, minutes, seconds, milliseconds); 
-	y=parseInt(str.substring(0,4));
-	m=parseInt(str.substring(4,6));
-	d=parseInt(str.substring(6,8));
-	h=parseInt(str.substring(9,11));
-	M=parseInt(str.substring(11,13));
-	s=parseInt(str.substring(13,15));
-	date= new Date(y,m,d,h,M,s);
-	return date;
+    //20140217T134500
+    //new Date(year, month, day, hours, minutes, seconds, milliseconds); 
+    y=parseInt(str.substring(0,4));
+    m=parseInt(str.substring(4,6));
+    d=parseInt(str.substring(6,8));
+    h=parseInt(str.substring(9,11));
+    M=parseInt(str.substring(11,13));
+    s=parseInt(str.substring(13,15));
+    date= new Date(y,m,d,h,M,s);
+    return date;
 }
 
 var formatDate = function (formatDate, formatString) {
-	if(formatDate instanceof Date) {
-		var months = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-		var yyyy = formatDate.getFullYear();
-		var yy = yyyy.toString().substring(2);
-		var m = formatDate.getMonth();
-		var mmm = months[m];
-		m+=1;
-		var mm = m < 10 ? "0" + m : m;
-		var d = formatDate.getDate();
-		var dd = d < 10 ? "0" + d : d;
-		
-		var h = formatDate.getHours();
-		var hh = h < 10 ? "0" + h : h;
-		var n = formatDate.getMinutes();
-		var nn = n < 10 ? "0" + n : n;
-		var s = formatDate.getSeconds();
-		var ss = s < 10 ? "0" + s : s;
+    if(formatDate instanceof Date) {
+        var months = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+        var yyyy = formatDate.getFullYear();
+        var yy = yyyy.toString().substring(2);
+        var m = formatDate.getMonth();
+        var mmm = months[m];
+        m+=1;
+        var mm = m < 10 ? "0" + m : m;
+        var d = formatDate.getDate();
+        var dd = d < 10 ? "0" + d : d;
+        
+        var h = formatDate.getHours();
+        var hh = h < 10 ? "0" + h : h;
+        var n = formatDate.getMinutes();
+        var nn = n < 10 ? "0" + n : n;
+        var s = formatDate.getSeconds();
+        var ss = s < 10 ? "0" + s : s;
 
-		formatString = formatString.replace(/yyyy/i, yyyy);
-		formatString = formatString.replace(/yy/i, yy);
-		formatString = formatString.replace(/mmm/i, mmm);
-		formatString = formatString.replace(/mm/i, mm);
-		formatString = formatString.replace(/m/i, m);
-		formatString = formatString.replace(/dd/i, dd);
-		formatString = formatString.replace(/d/i, d);
-		formatString = formatString.replace(/hh/i, hh);
-		formatString = formatString.replace(/h/i, h);
-		formatString = formatString.replace(/nn/i, nn);
-		formatString = formatString.replace(/n/i, n);
-		formatString = formatString.replace(/ss/i, ss);
-		formatString = formatString.replace(/s/i, s);
+        formatString = formatString.replace(/yyyy/i, yyyy);
+        formatString = formatString.replace(/yy/i, yy);
+        formatString = formatString.replace(/mmm/i, mmm);
+        formatString = formatString.replace(/mm/i, mm);
+        formatString = formatString.replace(/m/i, m);
+        formatString = formatString.replace(/dd/i, dd);
+        formatString = formatString.replace(/d/i, d);
+        formatString = formatString.replace(/hh/i, hh);
+        formatString = formatString.replace(/h/i, h);
+        formatString = formatString.replace(/nn/i, nn);
+        formatString = formatString.replace(/n/i, n);
+        formatString = formatString.replace(/ss/i, ss);
+        formatString = formatString.replace(/s/i, s);
 
-		return formatString;
-	} else {
-		return "";
-	}
+        return formatString;
+    } else {
+        return "";
+    }
 }
 
 function NavitiaDateTimeToString(sDateTime, formatString){
@@ -223,24 +223,24 @@ function NavitiaDateTimeToString(sDateTime, formatString){
 }
 
 function IsoToJsDate(chaine){
-	//20140302T120600 
-	//var d = new Date(year, month, day, hours, minutes, seconds, milliseconds); 
-	var y = chaine.substring(0,4);
-	var m = chaine.substring(4,6);
-	var d = chaine.substring(6,8);	
-	var h = chaine.substring(9,11);	
-	var n = chaine.substring(11,13);
-	var s = chaine.substring(13,15);
-	if (h == "") {
-		return new Date(y, m-1, d, 0, 0, 0, 0); 
-	} else {	
-		return new Date(y, m-1, d, h, n, s, 0); 
-	}
+    //20140302T120600 
+    //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds); 
+    var y = chaine.substring(0,4);
+    var m = chaine.substring(4,6);
+    var d = chaine.substring(6,8);    
+    var h = chaine.substring(9,11);    
+    var n = chaine.substring(11,13);
+    var s = chaine.substring(13,15);
+    if (h == "") {
+        return new Date(y, m-1, d, 0, 0, 0, 0); 
+    } else {    
+        return new Date(y, m-1, d, h, n, s, 0); 
+    }
 }
 
 function dateDiff(d1,d2){
-	var WNbJours = d1.getTime() - d2.getTime();
-	return Math.ceil(WNbJours/(1000*60*60*24));
+    var WNbJours = d1.getTime() - d2.getTime();
+    return Math.ceil(WNbJours/(1000*60*60*24));
 }
 
 
@@ -312,34 +312,34 @@ function endsWith(str, suffix) {
 }
 
 function sort_compare_coverage(cov1, cov2){
-	country1 = cov1.id.split('-')[0];
-	country2 = cov2.id.split('-')[0];
-	if (country1.length != country2.length) {
-		//on trie les pays les plus grands en premiers (clients specifiques type transilien)
-		return country2.length - country1.length;
-	} else {
-		//meme taille de pays, on met fr en 1er
-		country1 = country1.substring(0, 2);
-		country2 = country2.substring(0, 2);
-		if (country1 == country2) {
-			//on trie par ordre alpha
-			return cov1.id.localeCompare(cov2.id);
-		}
-		if (country1 == "fr") {  return -1;  }
-		if (country2 == "fr") {  return 1;  }
-	}
-	//on trie par ordre alpha
-	return cov1.id.localeCompare(cov2.id);
+    country1 = cov1.id.split('-')[0];
+    country2 = cov2.id.split('-')[0];
+    if (country1.length != country2.length) {
+        //on trie les pays les plus grands en premiers (clients specifiques type transilien)
+        return country2.length - country1.length;
+    } else {
+        //meme taille de pays, on met fr en 1er
+        country1 = country1.substring(0, 2);
+        country2 = country2.substring(0, 2);
+        if (country1 == country2) {
+            //on trie par ordre alpha
+            return cov1.id.localeCompare(cov2.id);
+        }
+        if (country1 == "fr") {  return -1;  }
+        if (country2 == "fr") {  return 1;  }
+    }
+    //on trie par ordre alpha
+    return cov1.id.localeCompare(cov2.id);
 }
 
 
 function geojsonToGmap(geo){
-	result=[];
-	for (var i in geo){
-		coord=geo[i];
-		result.push([coord[1], coord[0]]);
-	}
-	return result;
+    result=[];
+    for (var i in geo){
+        coord=geo[i];
+        result.push([coord[1], coord[0]]);
+    }
+    return result;
 }
 
 

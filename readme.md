@@ -8,7 +8,7 @@ It could be used as an example of an integration of the APIs or as a debugging d
 
 Organisation
 ------------
-Except for the JavaScript and images in the subfolder `/assets`, the root folder contains:
+Except for the JavaScript, CSS and images in the subfolder `/assets`, the root folder contains:
 * HTML pages, one page for each screen of the site
 * `navitia.php` : needed to secure the use of the token needed by the navitia's API call
 * `params.default.json` : configuration template file (copy and edit to a `params.json` file to be effective)

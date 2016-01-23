@@ -1,40 +1,40 @@
 function onMapClick(e) {
-	popup
-		.setLatLng(e.latlng)
-		.setContent("LatLon : " + e.latlng.lat + ", "+e.latlng.lng)
-		.openOn(map);
+    popup
+        .setLatLng(e.latlng)
+        .setContent("LatLon : " + e.latlng.lat + ", "+e.latlng.lng)
+        .openOn(map);
 }
 
 function getNetworkSelect(){
-	callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/?count=1000', '', function(response){
-		first_id = "";
-		selected_exists = false;
-		var str="<select name='network_id' id='network_id' onchange='document.forms[0].submit()'>"
-		for (var n in response.networks) {
-			var network = response.networks[n];
-			if (first_id == "") {first_id = network.id;}
-			selected = "";
-			if ((t["network_id"]) && (t["network_id"]==network.id)) {
-				selected_exists = true;
-				selected = " selected ";
-			}
-			str+= "<option " + selected+ " value='"+network.id+"'>" + network.name + "</option>";
-		}
-		str+="</select>";
+    callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/?count=1000', '', function(response){
+        first_id = "";
+        selected_exists = false;
+        var str="<select name='network_id' id='network_id' onchange='document.forms[0].submit()'>"
+        for (var n in response.networks) {
+            var network = response.networks[n];
+            if (first_id == "") {first_id = network.id;}
+            selected = "";
+            if ((t["network_id"]) && (t["network_id"]==network.id)) {
+                selected_exists = true;
+                selected = " selected ";
+            }
+            str+= "<option " + selected+ " value='"+network.id+"'>" + network.name + "</option>";
+        }
+        str+="</select>";
         document.getElementById("network_div").innerHTML=str;
         if ( (!t["network_id"]) || (!selected_exists) ){
-			//si aucun réseau selectionné : on prend le 1er et on relance la selection de la ligne
-			t["network_id"] = first_id;
-		}
+            //si aucun réseau selectionné : on prend le 1er et on relance la selection de la ligne
+            t["network_id"] = first_id;
+        }
         getLineSelect();
-	});
+    });
 }
 
 function getLineSelect(){
-	if (t["network_id"]) {
-		first_id = "";
-		selected_exists = false;
-		callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/?count=1000', '', 
+    if (t["network_id"]) {
+        first_id = "";
+        selected_exists = false;
+        callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/?count=1000', '', 
             function(response){
                 var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.lines) {
@@ -55,14 +55,14 @@ function getLineSelect(){
                 getRouteSelect();
             }
         );
-	}
+    }
 }
 
 function getRouteSelect(){
-	if (t["network_id"]) {
-		first_id = "";
-		selected_exists = false;
-		callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/'+t["line_id"]+'/routes/?count=1000', '', 
+    if (t["network_id"]) {
+        first_id = "";
+        selected_exists = false;
+        callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/'+t["line_id"]+'/routes/?count=1000', '', 
             function(response){
                 var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.routes) {
@@ -83,7 +83,7 @@ function getRouteSelect(){
                 getStopPointSelect();
             }
         );
-	}
+    }
 }
 
 function getStopPointSelect(){
@@ -138,23 +138,23 @@ function getVehicleJourneySelect(){
 
 function showDebugInfos(){
     str = "";
-	str += "<H4>Debug</H4>";
-	str += "<table>";
-	str += "<tr>";
-	str += "<th>TT Calendar</th>";
-	str += "<th>VJ Calendar</th>";
-	str += "</tr>";
-	str += "<tr>";
-	str += "<td>" + calendar_to_str(selected_calendar) + "</td>";
-	str += "<td>" + calendar_to_str(selected_vehicle_journey.calendars[0]) + "</td>";
-	str += "</tr>";
+    str += "<H4>Debug</H4>";
+    str += "<table>";
+    str += "<tr>";
+    str += "<th>TT Calendar</th>";
+    str += "<th>VJ Calendar</th>";
+    str += "</tr>";
+    str += "<tr>";
+    str += "<td>" + calendar_to_str(selected_calendar) + "</td>";
+    str += "<td>" + calendar_to_str(selected_vehicle_journey.calendars[0]) + "</td>";
+    str += "</tr>";
     document.getElementById("debug_div").innerHTML=str;
 }
 
 function getCalendarsSelect(){
-	if (t["network_id"]) {
-		first_id = "";
-		selected_exists = false;
+    if (t["network_id"]) {
+        first_id = "";
+        selected_exists = false;
         callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/'+t["line_id"]+'/routes/'+t["route_id"]+'/stop_points/'+t["stop_point_id"]+'/calendars/?count=1000', '', 
             function(response){
                 var str="";
@@ -186,11 +186,11 @@ function getCalendarsSelect(){
                 getCalendarsHtml()
             }
         );
-	}
+    }
 }
 
 function getCalendarsHtml(){
-	if (t["calendar_id"]) {
+    if (t["calendar_id"]) {
         duration = 10*3600;
         //dans le from_date_time, seule l'heure est utilisée et fixée à 4h du matin. A voir s'il y a besoin de le rendre paramétrable  plus tard 
         callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/'+t["line_id"]+'/routes/'+t["route_id"]+'/stop_points/'+t["stop_point_id"]+'/stop_schedules/?from_datetime=20160122T040000&duration='+ duration + '&calendar='+t["calendar_id"]+'&show_codes=true', '', 
@@ -207,11 +207,11 @@ function getCalendarsHtml(){
 
 function show_schedules_html(){
     hour_tab = [];
-	for (var i in schedules){
-		item=schedules[i];
-		horaires=""
-		for (j in item.date_times){
-			d=item.date_times[j].date_time;
+    for (var i in schedules){
+        item=schedules[i];
+        horaires=""
+        for (j in item.date_times){
+            d=item.date_times[j].date_time;
             h_str = d.substring(0,2);
             h_int = parseInt(h_str)
             if (!hour_tab[h_int]) {
@@ -220,45 +220,45 @@ function show_schedules_html(){
                  hour_tab[h_int]["minutes"] = [];
             }
             hour_tab[h_int]["minutes"].push(d.substring(2,4));
-		}
-	}
+        }
+    }
     hour_tab.sort();
 
-	str = "";
-	str += "<H4>horaires</H4>";
-	str += "<table>";
-	str += "<tr>";
-	str += "<td>Heure</td><td>minutes</td>";
-	str += "</tr>";
-	for (var i in hour_tab){
+    str = "";
+    str += "<H4>horaires</H4>";
+    str += "<table>";
+    str += "<tr>";
+    str += "<td>Heure</td><td>minutes</td>";
+    str += "</tr>";
+    for (var i in hour_tab){
         str += "<tr>";
-		h = hour_tab[i];
-		str+="<td  valign='top'>"+h["hour"]+"</td>";
-		str+="<td  valign='top'>";
-		for (j in h["minutes"]){
-			m = h["minutes"][j];
-			str+= m + "&nbsp;";
-		}
-		str+="</td>";
+        h = hour_tab[i];
+        str+="<td  valign='top'>"+h["hour"]+"</td>";
+        str+="<td  valign='top'>";
+        for (j in h["minutes"]){
+            m = h["minutes"][j];
+            str+= m + "&nbsp;";
+        }
+        str+="</td>";
         str+="</tr>";
-	}
+    }
 
-	str+="</table>";
-	document.getElementById("stop_schedules_div").innerHTML=str;
+    str+="</table>";
+    document.getElementById("stop_schedules_div").innerHTML=str;
 }
 
 function time_table_onLoad(){
-	menu.show_menu("menu_div");
-	t=extractUrlParams();
+    menu.show_menu("menu_div");
+    t=extractUrlParams();
 
-	getNetworkSelect(); 
+    getNetworkSelect(); 
 
-	map = L.map('map-canvas').setView([48.837212, 2.413], 8);
-	// add an OpenStreetMap tile layer
-	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map);
-	map.on('click', onMapClick);
+    map = L.map('map-canvas').setView([48.837212, 2.413], 8);
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    map.on('click', onMapClick);
 
 }
 
