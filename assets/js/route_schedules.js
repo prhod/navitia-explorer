@@ -49,8 +49,8 @@ function getNetworkSelect(){
         if ( (!t["network_id"]) || (!selected_exists) ){
 			//si aucun réseau selectionné : on prend le 1er et on relance la selection de la ligne
 			t["network_id"] = first_id;
-			getLineSelect();
 		}
+        getLineSelect();
 	});
 }
 
@@ -76,8 +76,8 @@ function getLineSelect(){
                 if ( (!t["line_id"]) || (!selected_exists) ){
                     //si aucune ligne selectionné : on prend la 1ere et on relance la selection de la route
                     t["line_id"] = first_id;
-                    getRouteSelect();
                 }
+                getRouteSelect();
             }
         );
 	}
@@ -105,8 +105,8 @@ function getRouteSelect(){
                 if ( (!t["route_id"]) || (!selected_exists) ){
                     //si aucun parcours selectionné : on prend le 1er et on relance l'affichage de la grille
                     t["route_id"] = first_id;
-                    getRouteSchedule();
                 }
+                getRouteSchedule();
             }
         );
 	}
@@ -175,9 +175,6 @@ function route_schedule_onLoad(){
 	if (t["heure"]) { document.getElementById("heure").value=decodeURIComponent(t["heure"]);}
 
 	getNetworkSelect();
-	getLineSelect();
-	getRouteSelect();
-	getRouteSchedule();
 
 	map = L.map('map-canvas').setView([48.837212, 2.413], 8);
 	// add an OpenStreetMap tile layer

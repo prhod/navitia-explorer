@@ -92,8 +92,7 @@ function showPlaces(response){
 			str+= "<td>"+place.embedded_type+"</td>";
 			switch (place.embedded_type) {
 				case "administrative_region" : 
-					str+= "<td><a href='city.html?"+"&ws="+document.getElementById("ws_name").value+
-						"&coverage="+document.getElementById("coverage").value+"&id="+place.id + "&name="+place.name+"'>" + place.name + "</a></td>";
+					str+= "<td>" + place.name + "</td>";
 					break;
 				case "stop_area" : 
 					str+= "<td><a href='ptref.html?"+"&ws_name="+document.getElementById("ws_name").value+

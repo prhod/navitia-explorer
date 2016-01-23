@@ -34,8 +34,8 @@ var menu={
 			title:"Nearby"
 		},
 		{
-			name:"tests",
-			title:"Validation"
+			name:"time_table",
+			title:"TT - Arrêt"
 		}
 	]
 };

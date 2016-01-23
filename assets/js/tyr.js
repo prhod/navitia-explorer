@@ -36,20 +36,6 @@ function print_tyr_job_list(response){
 				str_properties += p + ":" + job.instance[p]+"<br>";
 		}
 		str+="<td>" + str_properties+"</td>";
-/*
-		str+="<td>";
-		dstr=r.end_production_date + " (" + dateDiff(myDate,now)+")"
-		if (dateDiff(myDate,now) > 21) {
-			str+="<span style=''>" + dstr+"</span>";
-		} else  {
-			if (dateDiff(myDate,now) > 7) {
-				str+="<span style='color:#666600;'>" + dstr+"</span>";
-			} else {
-				str+="<span style='color:red;'>" + dstr+"</span>";
-			}
-		}
-		str+="</td>";
-*/
 		str+="</tr>";
 	}
 	str+="</table>"
@@ -61,7 +47,6 @@ function tyr_onLoad() {
 	menu.show_menu("menu_div");
 
 	t=extractUrlParams();
-    //ne fonctionne pas avec Tyr.
 	callTyrJS(t["ws_name"], "jobs/"+t["coverage"], print_tyr_job_list);
 }
 

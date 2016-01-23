@@ -343,9 +343,30 @@ function geojsonToGmap(geo){
 }
 
 
+function calendar_operating_days_to_str(calendar){
+    result = (calendar.week_pattern.monday) ? "L" : "-";
+    result += (calendar.week_pattern.tuesday) ? "Ma" : "-";
+    result += (calendar.week_pattern.wednesday) ? "Me" : "-";
+    result += (calendar.week_pattern.thursday) ? "J" : "-";
+    result += (calendar.week_pattern.friday) ? "V" : "-";
+    result += (calendar.week_pattern.saturday) ? "S" : "-";
+    result += (calendar.week_pattern.sunday) ? "D" : "-";
+    return result;
+}
 
-
-
-
-
-
+function calendar_to_str(calendar){
+    title = "";
+    for (var j in calendar.active_periods){
+        p = calendar.active_periods[j];
+        title += "du "+ p.begin + " au " + p.end + "\n"; 
+    }
+    title += "jours : " + calendar_operating_days_to_str(calendar) + "\n";
+    //on ajoute les exceptions
+    if (calendar.exceptions) {
+        for (var j in calendar.exceptions){
+            e = calendar.exceptions[j];
+            title += e.type + " "+ e.datetime + "\n"; 
+        }
+    }
+    return title;
+}

@@ -1,30 +1,30 @@
 ptref = function() {
-	this.object_list=null,
-	this.disruption_list=null,
-	this.object_count=-1,
-	this.object_type="",
-	this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports" ],
-	this.response = null,
-	this.load = function(ws_name, coverage, uri, call_back){
-		if (endsWith(uri, "/departures/")) {
-			navitia_call="coverage/"+coverage+uri+"?count=20";
-			this.object_type = "departures";
-		} else if (endsWith(uri, "/places_nearby/")) {
-			navitia_call="coverage/"+coverage+uri+"?count=100";
-			this.object_type = "places_nearby";
-		} else {
-			navitia_call="coverage/"+coverage+uri+"?count=1000";
-			nav_params = uri.split("/");
-			for (i = nav_params.length-1; i >=0; i--) {
-				nav_param = nav_params[i];
-				if (nav_param != "") {
-					if (this.object_type_list.indexOf(nav_param) > -1) {
-						this.object_type = nav_param;
-						break;
-					}
-				}
-			}
-		}
+    this.object_list=null,
+    this.disruption_list=null,
+    this.object_count=-1,
+    this.object_type="",
+    this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports", "calendars" ],
+    this.response = null,
+    this.load = function(ws_name, coverage, uri, call_back){
+        if (endsWith(uri, "/departures/")) {
+            navitia_call="coverage/"+coverage+uri+"?count=20";
+            this.object_type = "departures";
+        } else if (endsWith(uri, "/places_nearby/")) {
+            navitia_call="coverage/"+coverage+uri+"?count=100";
+            this.object_type = "places_nearby";
+        } else {
+            navitia_call="coverage/"+coverage+uri+"?count=1000";
+            nav_params = uri.split("/");
+            for (i = nav_params.length-1; i >=0; i--) {
+                nav_param = nav_params[i];
+                if (nav_param != "") {
+                    if (this.object_type_list.indexOf(nav_param) > -1) {
+                        this.object_type = nav_param;
+                        break;
+                    }
+                }
+            }
+        }
         callNavitiaJS(ws_name, navitia_call, '', function(response){
 			ptref.response = response;
 			var names = Object.keys( response );
@@ -63,15 +63,15 @@ function getWorstDisruption(object_links){
 }
 
 function getSeverityIcon(disruption) {
-	if (disruption != "") {
-		title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + (disruption.messages ? disruption.messages[0].text : "") ;
-		if (disruption.severity.effect == "NO_SERVICE"){
-			return '<img src="./assets/img/notification_error.png" title="'+title+'" height="20" width="20">';
-		} else {
-			return '<img src="./assets/img/warning.jpeg" title="'+title+'" height="20" width="20">';
-		}
-	}
-	return "";
+    if (disruption != "") {
+        title = "Severity: "+disruption.severity.effect + "\n" + "Message: " + (disruption.messages ? disruption.messages[0].text : "");
+        if (disruption.severity.effect == "NO_SERVICE"){
+            return '<img src="./assets/img/notification_error.png" title="'+title+'" height="20" width="20">';
+        } else {
+            return '<img src="./assets/img/warning.jpeg" title="'+title+'" height="20" width="20">';
+        }
+    }
+    return "";
 }
 
 function onMapClick(e) {
@@ -104,31 +104,31 @@ function changeURI(base_uri, object_id, uri_end) {
 }
 
 function getNewURI(changed_uri, keep_current, current_id) {
-	url = location.href;
-	base_uri = url.substring(0, url.indexOf("?"));
-	params = url.substring(url.indexOf("?")+1, 1000);
-	params = params.split("&");
-	new_uri = "";
-	for (i in params) {
-		p = params[i];
-		if (p.split('=')[0] != 'uri'){
-			new_uri += p.split('=')[0] + "=" + p.split('=')[1]+"&";
-		} else {
-			if (keep_current) {
-				if (p.endsWith(current_id+'/')) {
-					new_uri += "uri" + "=" + p.split('=')[1] + changed_uri+"&";
-				} else {
-					new_uri += "uri" + "=" + p.split('=')[1] + current_id + '/' + changed_uri+"&";
-				}
-			} else {
-				new_uri += "uri" + "=" + changed_uri+"&";
-			}
-		}
-	}
-	new_uri = new_uri.replace(/%2F/g, '/');
-	new_uri = new_uri.replace(/\/\//g, '/');
-	new_uri = base_uri + '?' + new_uri;
-	return new_uri;
+    url = location.href;
+    base_uri = url.substring(0, url.indexOf("?"));
+    params = url.substring(url.indexOf("?")+1, 1000);
+    params = params.split("&");
+    new_uri = "";
+    for (i in params) {
+        p = params[i];
+        if (p.split('=')[0] != 'uri'){
+            new_uri += p.split('=')[0] + "=" + p.split('=')[1]+"&";
+        } else {
+            if (keep_current) {
+                if (p.endsWith(current_id+'/')) {
+                    new_uri += "uri" + "=" + p.split('=')[1] + changed_uri+"&";
+                } else {
+                    new_uri += "uri" + "=" + p.split('=')[1] + current_id + '/' + changed_uri+"&";
+                }
+            } else {
+                new_uri += "uri" + "=" + changed_uri+"&";
+            }
+        }
+    }
+    new_uri = new_uri.replace(/%2F/g, '/');
+    new_uri = new_uri.replace(/\/\//g, '/');
+    new_uri = base_uri + '?' + new_uri;
+    return new_uri;
 }
 
 function showNetworksHtml(){
@@ -150,6 +150,29 @@ function showNetworksHtml(){
 		s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
 		worst_disruption = getWorstDisruption(n.links);
 		s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
+		s_str+="</tr>\n";
+		str+=s_str;
+	}
+	str+='</table>'
+	document.getElementById('ptref_content').innerHTML=str;
+}
+
+
+
+function showCalendarsHtml(){
+	str="";
+	str+='<table><tr>';
+	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
+	str+='<th>Name</th>';
+	str+='<th>Explorer</th>';
+	str+='</tr>';
+	for (var i in ptref.object_list){
+		n=ptref.object_list[i];
+		s_str="<tr>";
+		s_str+='<td><a href="'+getNewURI('/calendars/'+n.id+'/', false, n.id)+'">'+n.id+'</a></td>';
+        title = calendar_to_str(n);
+		s_str+='<td><span title="'+title+'">'+n.name + "</span></td>";
+		s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lines</a></td>';
 		s_str+="</tr>\n";
 		str+=s_str;
 	}
@@ -192,7 +215,7 @@ function showTrafficReportsHtml(){
 	  }
 	}
 	str+='</table>'
-		
+
 	str+='<table><tr>';
 	str+='<th>Network</th>';
 	str+='<th>Line</th>';
@@ -202,33 +225,31 @@ function showTrafficReportsHtml(){
 	str+='<th>Updated</th>';
 	str+='<th>  </th>';
 	str+='</tr>';
-	for (var i in ptref.object_list){
-	  //chaque élément contient toutes les perturbations d'un réseau
-	  n=ptref.object_list[i];
-	  network_id = n.network.id;
-	  network_name = n.network.name;
-
-	  for (var j in n.lines) {
-		  l=n.lines[j];
-		  for (var k in l.links){
-			  d=l.links[k];
-			  s_str="<tr>";
-			  s_str+='<td>'+'<a href="'+getNewURI('/networks/'+ network_id + '/', false)+'" ">'+ network_id + "</a>" + "</td>";
-			  s_str+='<td>'+'<a href="'+getNewURI('/lines/'+ l.id + '/', false)+'" ">'+"<span class='icon-ligne' style='background-color: #"+l.color+";'>"+l.code + "</span>" +"</a></td>";
-			  s_str+='<td>'+ptref.disruption_list[d.id].status+'</td>';
-			  s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].begin+'</td>';
-			  s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].end+'</td>';
-			  s_str+='<td>'+ptref.disruption_list[d.id].updated_at+'</td>';
-			  if (ptref.disruption_list[d.id].severity.effect = "NO_SERVICE"){
-				  s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
-			  } else {
-				  s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
-			  }
-
-			  s_str+="</tr>\n";
-			  str+=s_str;
-		  }
-	  }
+    for (var i in ptref.object_list){
+        //chaque élément contient toutes les perturbations d'un réseau
+        n=ptref.object_list[i];
+        network_id = n.network.id;
+        network_name = n.network.name;
+        for (var j in n.lines) {
+            l=n.lines[j];
+            for (var k in l.links){
+                d=l.links[k];
+                s_str="<tr>";
+                s_str+='<td>'+'<a href="'+getNewURI('/networks/'+ network_id + '/', false)+'" ">'+ network_id + "</a>" + "</td>";
+                s_str+='<td>'+'<a href="'+getNewURI('/lines/'+ l.id + '/', false)+'" ">'+"<span class='icon-ligne' style='background-color: #"+l.color+";'>"+l.code + "</span>" +"</a></td>";
+                s_str+='<td>'+ptref.disruption_list[d.id].status+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].begin+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].application_periods[0].end+'</td>';
+                s_str+='<td>'+ptref.disruption_list[d.id].updated_at+'</td>';
+                if (ptref.disruption_list[d.id].severity.effect = "NO_SERVICE"){
+                    s_str+='<td><img src="./assets/img/notification_error.png" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
+                } else {
+                    s_str+='<td><img src="./assets/img/warning.jpeg" title="Severity: '+ptref.disruption_list[d.id].severity.effect+'" height="20" width="20"></td>';
+                }
+                s_str+="</tr>\n";
+                str+=s_str;
+            }
+        }
 	}
 	str+='</table>'
 
@@ -295,12 +316,11 @@ function showModesHtml(){
 }
 
 function showStopAreasHtml(){
-  newBounds=[];
+    newBounds=[];
 	str="";
 	str+='<table><tr>';
 	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
 	str+='<th>Label</th>';
-	//str+='<th>City</th>';
 	str+='<th>Explorer</th>';
 	str+='<th></th>';
 	str+='</tr>';
@@ -309,13 +329,6 @@ function showStopAreasHtml(){
 		s_str="<tr>";
 		s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
 		s_str+='<td>'+n.label + "</td>";
-		/*
-		s_str+='<td>';
-		for (var j in n.administrative_regions){
-			c=n.administrative_regions[j];
-			s_str+= c.id + " ";
-		}
-		*/
 		s_str+='</td>';
 		s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
 		s_str+='<td><a href="'+getNewURI('/stop_points/', true, n.id)+'">StopPoints</a></td>';
@@ -444,8 +457,10 @@ function showDeparturesHtml(){
 }
 
 function showErrorHtml(){
-	str = ptref.response.error.message;
-	document.getElementById('ptref_content').innerHTML=str;
+    if (ptref.response.error) {
+        str = ptref.response.error.message;
+        document.getElementById('ptref_content').innerHTML=str;
+    }
 }
 
 function showPOIsHtml(){
@@ -644,7 +659,39 @@ function showLinesHtml(){
 	}
 	str+='</table>'
 	document.getElementById('ptref_content').innerHTML=str;
-	console.log(newBounds);
+	if (newBounds) {map.fitBounds(newBounds)};
+	//if (this.network_list){this.showNetworkOnMap(this.network_list[0]);}
+}
+
+function showVehicleJourneysHtml(){
+	str="";
+	str+='<table><tr>';
+	str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
+	str+='<th>Name</th>';
+	str+='<th>Calendars</th>';
+	str+='<th>Explorer</th>';
+	str+='</tr>';
+	newBounds=false;
+	for (var i in ptref.object_list){
+		n=ptref.object_list[i];
+		s_str="<tr>";
+		s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
+		s_str+='<td>'+n.name + "</td>";
+		s_str+='<td>';
+        for (var j in n.calendars){
+            c = n.calendars[j];
+            hint = calendar_to_str(c);
+            if (j > 0) s_str+= "<br>";  
+            label = calendar_operating_days_to_str(c);
+            s_str+='<span title="'+hint+'">'+ label + "</span>";
+        }
+		s_str+='</td>';
+		s_str+='<td><a href="'+getNewURI('/stop_points/', true, n.id)+'">Points d\'arrêts</a></td>';
+		s_str+="</tr>\n";
+		str+=s_str;
+	}
+	str+='</table>'
+	document.getElementById('ptref_content').innerHTML=str;
 	if (newBounds) {map.fitBounds(newBounds)};
 	//if (this.network_list){this.showNetworkOnMap(this.network_list[0]);}
 }
@@ -693,6 +740,8 @@ function showObjectHtml(ptref){
 		showStopPointsHtml();
 	} else if (ptref.object_type == "routes") {
 		showRoutesHtml();
+	} else if (ptref.object_type == "vehicle_journeys") {
+		showVehicleJourneysHtml();
 	} else if (ptref.object_type == "connections") {
 		showConnectionsHtml();
 	} else if (ptref.object_type == "poi_types") {
@@ -705,6 +754,8 @@ function showObjectHtml(ptref){
 		showPlacesNearbyHtml();
 	} else if (ptref.object_type == "traffic_reports") {
 		showTrafficReportsHtml();
+	} else if (ptref.object_type == "calendars") {
+		showCalendarsHtml();
 	} else if (ptref.object_type == "networks") {
 		showNetworksHtml();
 	} else {
