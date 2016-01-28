@@ -1,44 +1,44 @@
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<link type="text/css" href="global.css" rel="stylesheet" />
-	<link rel="stylesheet" href="./assets/leaflet_0.7.7/leaflet.css" />
-	<link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="./assets/css/global.css" />
+    <link rel="stylesheet" href="./assets/leaflet_0.7.7/leaflet.css" />
+    <link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css">
 </head>
 <body onload="journey_onLoad()">
     <div id="params_div"></div>
-	<form id="form1">
-		<nav class="navbar navbar-default">
-		  <div class="container-fluid">
-			<div class="navbar-header">
-			  <a class="navbar-brand" href="#">Navitia Explorer</a>
-			</div>
-			<div id="menu_div">	</div>
-		  </div>
-		</nav>		
-		<input type="hidden" id="forbidden_uris" name="forbidden_uris" value="">
-		<div id="content" >
-			<h1 style="text-align:center;padding:0px;margin:0px">Recherche/diagnostique d'itinéraire</h1>
-			<div id="params1" style="margin:0px;padding:0px;">
-				<table>
-					<tr>
-						<td width="310px">
-							<label for="from_text">Départ : </label>
-							<input id="from_text" name="from_text" type="text">      <input id="from" name="from" type="hidden"> 
-							<label for="to_text">Arrivée : </label>
-							<input id="to_text" name="to_text" type="text">      <input id="to" name="to" type="hidden"> 
-						</td>
-						<td  valign="top">
-							date : <input type="texte" id="date" name="date" size="5"><br>
-							heure : <input type="texte" id="time" name="time" size="1"><br>
+    <form id="form1">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Navitia Explorer</a>
+            </div>
+            <div id="menu_div">    </div>
+          </div>
+        </nav>        
+        <input type="hidden" id="forbidden_uris" name="forbidden_uris" value="">
+        <div id="content" >
+            <h1 style="text-align:center;padding:0px;margin:0px">Recherche/diagnostique d'itinéraire</h1>
+            <div id="params1" style="margin:0px;padding:0px;">
+                <table>
+                    <tr>
+                        <td width="310px">
+                            <label for="from_text">Départ : </label>
+                            <input id="from_text" name="from_text" type="text">      <input id="from" name="from" type="hidden"> 
+                            <label for="to_text">Arrivée : </label>
+                            <input id="to_text" name="to_text" type="text">      <input id="to" name="to" type="hidden"> 
                         </td>
                         <td  valign="top">
-							Partir après<input type="radio" id="datetime_represents_d" name="datetime_represents" value="departure" checked="true"><br>
-							Arriver avant<input type="radio" id="datetime_represents_a" name="datetime_represents" value="arrival">
-						</td>
+                            date : <input type="texte" id="date" name="date" size="5"><br>
+                            heure : <input type="texte" id="time" name="time" size="1"><br>
+                        </td>
+                        <td  valign="top">
+                            Partir après<input type="radio" id="datetime_represents_d" name="datetime_represents" value="departure" checked="true"><br>
+                            Arriver avant<input type="radio" id="datetime_represents_a" name="datetime_represents" value="arrival">
+                        </td>
                     </tr>
                 </table>
-                <h3 id="toggle_other_params">Paramètres avancés</h3>							
+                <h3 id="toggle_other_params">Paramètres avancés</h3>                            
                 <table id="other_params" hidden>
                     <tr>
                         <td valign="top"  style="font-size:10px">
@@ -90,20 +90,19 @@
                 </tr>
             </table>
         </div>
-	</form>
-	<div id="footer" class="footer">
-		github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>			
-		<a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
-		<a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
-	</div>    
-    <script type="text/javascript" src="./assets/js/jquery-1.11.0.min.js"></script>
-	<script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
-	<script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
-	<script type="text/javascript" src="./assets/js/shortcut.js"></script>
-	<script type="text/javascript" src="./assets/js/menu.js"></script>
-	<script type="text/javascript" src="./assets/js/lib.js"></script>
-	<script type="text/javascript" src="./assets/js/conversion.js"></script>
-	<script type="text/javascript" src="./assets/js/journey.js"></script>
-	<script type="text/javascript" src="./assets/js/journey_autocomplete.js"></script>
+    </form>
+    <div id="footer" class="footer">
+        github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>            
+        <a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
+        <a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
+    </div>    
+    <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
+    <script type="text/javascript" src="./assets/js/shortcut.js"></script>
+    <script type="text/javascript" src="./assets/js/menu.js"></script>
+    <script type="text/javascript" src="./assets/js/lib.js"></script>
+    <script type="text/javascript" src="./assets/js/conversion.js"></script>
+    <script type="text/javascript" src="./assets/js/journey.js"></script>
 </body>
 </html>
