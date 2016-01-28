@@ -191,7 +191,7 @@ function getCalendarsSelect(){
 
 function getCalendarsHtml(){
     if (t["calendar_id"]) {
-        duration = 10*3600;
+        duration = 24*3600;
         //dans le from_date_time, seule l'heure est utilisée et fixée à 4h du matin. A voir s'il y a besoin de le rendre paramétrable  plus tard 
         callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/'+t["line_id"]+'/routes/'+t["route_id"]+'/stop_points/'+t["stop_point_id"]+'/stop_schedules/?from_datetime=20160122T040000&duration='+ duration + '&calendar='+t["calendar_id"]+'&show_codes=true', '', 
             function(response){
