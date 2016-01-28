@@ -14,23 +14,24 @@ Except for the JavaScript, CSS and images in the subfolder `/assets`, the root f
 
 How to quick use
 ----------------
-There is no (more) need of a web server to quick use : 
+There is no (more) need of a web server to quick use :
 * Clone the project where you want to work (`git clone`)
 * In the root of you project, create and edit `params.json` (`cp params.default.json params.json`)
 * Open any HTML file in your browser by a double-clic
-* Enjoy! 
+* Enjoy!
 
 How to install properly on Ubuntu
 ------------------------
-From a scratch installation of Ubuntu this is one possibility (not the only one):
-* Clone the project where you want to work (`git clone`)
+If you want to serve your navitia explorer, from a scratch installation of Ubuntu you can :
+* Use a python HTTP server (`python -m SimpleHTTPServer`)
+* Enjoy! (`firefox http://localhost:8000/`)
+
+If you are rather an Apache boy/girl, you can :
 * Install `apache2` (`sudo apt-get install apache2`)
 * Create a symbolic link of the project in `/var/www/html/` (`ln -sf /complete/path/to/navitia-explorer /var/www/html/navitia-explorer`)
-* In the root of you project, create and edit `params.json` (`cp params.default.json params.json`)
 * One might have to restart apache (`sudo service apache2 restart`)
 * Enjoy! (`firefox http://localhost/navitia-explorer/journey.html`)
 
 How to contribute
 -----------------
 Fork the github repo, create a new branch, and submit your pull request!
- 
