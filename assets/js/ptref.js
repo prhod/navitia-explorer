@@ -132,31 +132,24 @@ function getNewURI(changed_uri, keep_current, current_id) {
 }
 
 function showNetworksHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='<th></th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('/networks/'+n.id+'/', false, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/physical_modes/', true, n.id)+'">Modes Ph</a></td>';
-        s_str+='<td><a href="'+getNewURI('/commercial_modes/', true, n.id)+'">Modes Co</a></td>';
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lines</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"  
+        item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"  
+        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
         worst_disruption = getWorstDisruption(n.links);
-        s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-    }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
+        item.innerHTML += getSeverityIcon(worst_disruption);
+    } 
 }
-
 
 
 function showCalendarsHtml(){
@@ -314,34 +307,28 @@ function showModesHtml(){
     str+='</table>'
     document.getElementById('ptref_content').innerHTML=str;
 }
-
 function showStopAreasHtml(){
     newBounds=[];
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Label</th>';
-    str+='<th>Explorer</th>';
-    str+='<th></th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.label + "</td>";
-        s_str+='</td>';
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_points/', true, n.id)+'">StopPoints</a></td>';
-        s_str+='<td><a href="'+getNewURI('/connections/', true, n.id)+'">Corresp.</a></td>';
-        s_str+='<td><a href="'+getNewURI('/departures/', true, n.id)+'">Depart.</a></td>';
-        s_str+='<td><a href="stop_schedules.html?ws_name='+ws_name+'&coverage='+coverage+'&stop_area_id='+n.id+'">Horaires</a></td>';
-        s_str+='<td><a href="'+getNewURI('/places_nearby/', true, n.id)+'">Nearby</a></td>';
-        worst_disruption = getWorstDisruption(n.links);
-        s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
-        s_str+="</tr>\n";
-        str+=s_str;
         coord=n.coord;
-        n.marker = L.marker([coord.lat, coord.lon]).addTo(map);
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='zoom_to_item("+coord.lat+","+coord.lon+", \""+n.id +"\")'>" + n.label + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"  
+        item.innerHTML += "- <a href='"+getNewURI('/stop_points/', true, n.id)+"' >Points d'arrêts </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/connections/', true, n.id)+"' > Correspondances </a>"  
+        item.innerHTML += "- <a href='"+getNewURI('/departures/', true, n.id)+"' > Prochains départs </a>"
+        item.innerHTML += "- <a href='stop_schedules.html?ws_name="+ws_name+"&coverage="+coverage+"&stop_area_id="+n.id+"' > Horaires </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/places_nearby/', true, n.id)+"' > Autour </a>"
+        worst_disruption = getWorstDisruption(n.links);
+        item.innerHTML += getSeverityIcon(worst_disruption);
+                    
+        n.marker = L.marker([coord.lat, coord.lon]);
         lamb=WGS_ED50(coord.lon, coord.lat);
         try {
             s_city=n.administrative_regions[0].name;
@@ -350,6 +337,16 @@ function showStopAreasHtml(){
             s_city="no_city";
         }
 
+        n.marker.item_id = "item_" + n.id;
+        
+        n.marker.on('click', function(e) {
+            map.panTo([e.latlng.lat, e.latlng.lng]);
+            item = document.getElementById(this.item_id);
+            setActive(item);
+            item.scrollIntoView();
+        });
+        
+            
         n.marker.bindPopup(
             "<b>"+n.name+"</b>"+
             "<br />"+s_city+
@@ -357,16 +354,28 @@ function showStopAreasHtml(){
             "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
             "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
         );
+        
         map.addLayer(n.marker);
-        if (i==0) { map.setView([coord.lat, coord.lon]);}
-
         newBounds.push([coord.lat, coord.lon]);
+        
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
 }
 
+function zoom_to_item(lat, lon, _id){
+      map.setView([lat,lon],19);
+      item = document.getElementById("item_" + _id);
+      setActive(item);
+}
+function setActive(el) {
+    var ptref_div = document.getElementById('ptref_content');
+    var all_items = ptref_div.getElementsByTagName('div');
+    for (var i = 0; i < all_items.length; i++) {
+      all_items[i].className = all_items[i].className
+      .replace(/active/, '').replace(/\s\s*$/, '');
+    }
+    el.parentNode.className += ' active';
+}
 function showStopPointsHtml(){
     newBounds=[];
     str="";
