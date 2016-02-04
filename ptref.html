@@ -6,14 +6,16 @@
     <link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css" />
 </head>
 <body onload="ptref_onLoad();">
-    <div id="params_div"></div>
-    <form name="form">
-        <div id="menu_div"></div>
-        <input type="hidden" id="uri" name="uri" value="">
-    </form>
+    <header>
+        <div id="params_div"></div>
+        <form name="form">
+            <nav id="menu_div"></nav>
+            <input type="hidden" id="uri" name="uri" value="">
+        </form>
+    </header>
+
     <div id="content" >
-        <div id="params1" style="margin:0px;padding:0px;">
-        </div>
+        <div id="params1" style="margin:0px;padding:0px;"></div>
 
         <h1 style="text-align:center;padding:0px;margin:0px">Exploration des données</h1>
         <input type="button" value="Voir les réseaux" onclick="changeURI('/networks/','', '')">
@@ -23,22 +25,19 @@
         <input type="button" value="Voir les calendars" onclick="changeURI('/calendars/','', '')">
         <input type="button" value="Voir l'état du trafic" onclick="changeURI('/traffic_reports/','', '')">
         <div id="ariane_content">Ariane : <div id="ariane" style="display:inline;"></div></div>
-        <table width="100%" height="500px" border="1">
-            <tr>
-                <td width="50%" valign="top">
+        <section class="first_half">
             <div id="ptref_content"></div>
-                </td>
-                <td width="50%">
-            <div id="map-canvas"  style="height: 100%;width:100%"></div>
-                </td>
-            </tr>
-        </table>
+        </section><!--
+        do not remove !
+        --><section class="second_half">
+          <div id="map-canvas" class="map-canvas"></div>
+        </section>
     </div>
-    <div id="footer" class="footer">
+    <footer id="footer" class="footer">
         github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>            
         <a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
         <a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
-    </div>    
+    </footer>    
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>

@@ -63,3 +63,20 @@ ul li a:hover {
     text-align : center;
     font-size: 14px;
 }
+/*style pour virer les tableaux */
+section {
+  display: inline-block;
+  vertical-align: top;
+  max-width : 600px;
+  border:6px solid #949599;
+}
+
+section.first_half {
+ max-height : 500px;
+ overflow-y: scroll;
+ }
+ 
+.map-canvas {
+    height : 500px;
+    width: 500px;
+}
