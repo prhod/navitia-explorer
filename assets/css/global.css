@@ -1,4 +1,4 @@
-body {font-size: 62.5%;
+body {font-size: 12px;
     font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
 }
 ul.title {
@@ -60,6 +60,10 @@ ul li a:hover {
 }
 
 .footer{
+    text-align : center;
+    font-size: 14px;
+}
+h2{
     text-align : center;
     font-size: 14px;
 }

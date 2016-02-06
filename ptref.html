@@ -18,12 +18,15 @@
         <div id="params1" style="margin:0px;padding:0px;"></div>
 
         <h1 style="text-align:center;padding:0px;margin:0px">Exploration des données</h1>
-        <input type="button" value="Voir les réseaux" onclick="changeURI('/networks/','', '')">
-        <input type="button" value="Voir les modes commerciaux" onclick="changeURI('/commercial_modes/','', '')">
-        <input type="button" value="Voir les modes physiques" onclick="changeURI('/physical_modes/','', '')">
-        <input type="button" value="Voir les POI" onclick="changeURI('/poi_types/','', '')">
-        <input type="button" value="Voir les calendars" onclick="changeURI('/calendars/','', '')">
-        <input type="button" value="Voir l'état du trafic" onclick="changeURI('/traffic_reports/','', '')">
+        <h2>
+            <a href="" onclick="changeURI('/networks/','', '')"> Réseaux </a>-
+            <a href="" onclick="changeURI('/commercial_modes/','', '')"> Modes commerciaux </a> -
+            <a href="" onclick="changeURI('/physical_modes/','', '')"> Modes physiques </a> -
+            <a href="" onclick="changeURI('/poi_types/','', '')"> Pois </a> -
+            <a href="" onclick="changeURI('/calendars/','', '')"> Calendriers </a> -
+            <a href="" onclick="changeURI('/traffic_reports/','', '')"> État du trafic </a>  
+        </h2>    
+
         <div id="ariane_content">Ariane : <div id="ariane" style="display:inline;"></div></div>
         <section class="first_half">
             <div id="ptref_content"></div>
