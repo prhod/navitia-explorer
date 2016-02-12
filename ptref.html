@@ -14,7 +14,7 @@
         </form>
     </header>
 
-    <div id="content" >
+    <div>
         <h1>Exploration des données</h1>
         <h2>
             <a href="" onclick="changeURI('/networks/','', '')"> Réseaux </a>-
@@ -26,13 +26,15 @@
         </h2>    
 
         <div id="ariane_content">Ariane : <div id="ariane" style="display:inline;"></div></div>
-        <section class="first_half">
-            <div id="ptref_content"></div>
-        </section><!--
-        do not remove !
-        --><section class="second_half">
-          <div id="map-canvas" class="map-canvas"></div>
-        </section>
+        <div id="content">
+            <section class="first_half">
+                <div id="ptref_content"></div>
+            </section><!--
+            do not remove !
+            --><section class="second_half">
+              <div id="map-canvas" class="map-canvas"></div>
+            </section>
+        </div>
     </div>
     <footer id="footer" class="footer">
         github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>            
