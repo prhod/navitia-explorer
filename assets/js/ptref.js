@@ -321,49 +321,18 @@ function showStopAreasHtml(){
     total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        coord=n.coord;
         var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='zoom_to_item("+coord.lat+","+coord.lon+", \""+n.id +"\")'>" + n.label + "</a>";
-        item.innerHTML += "<small>" + n.id + "</small>";
-        item.innerHTML += "<br><a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/stop_points/', true, n.id)+"' >Points d'arrêts </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/connections/', true, n.id)+"' > Correspondances </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/departures/', true, n.id)+"' > Prochains départs </a>"
-        item.innerHTML += "- <a href='stop_schedules.html?ws_name="+ws_name+"&coverage="+coverage+"&stop_area_id="+n.id+"' > Horaires </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/places_nearby/', true, n.id)+"' > Autour </a>"
-        worst_disruption = getWorstDisruption(n.links);
-        item.innerHTML += getSeverityIcon(worst_disruption);
 
-        n.marker = L.marker([coord.lat, coord.lon]);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        try {
-            s_city=n.administrative_regions[0].name;
-        }
-        catch (err) {
-            s_city="no_city";
-        }
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label
+        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.explo_links = {"Lignes" : getNewURI('/lines/', true, n.id) ,"Points d'arrêts" : getNewURI('/stop_points/', true, n.id) , "Prochains départs" : getNewURI('/departures/', true, n.id) ,"Correspondances" : getNewURI('/connections/', true, n.id), "Horaires" : "stop_schedules.html?ws_name="+ws_name+"&coverage="+coverage+"&stop_area_id="+n.id, "Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
+        pt_item.worst_disruption = getWorstDisruption(n.links);
 
-        n.marker.item_id = "item_" + n.id;
-
-        n.marker.on('click', function(e) {
-            map.panTo([e.latlng.lat, e.latlng.lng]);
-            item = document.getElementById(this.item_id);
-            setActive(item);
-            item.scrollIntoView();
-        });
-
-
-        n.marker.bindPopup(
-            "<b>"+n.name+"</b>"+
-            "<br />"+s_city+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-
-        map.addLayer(n.marker);
-        newBounds.push([coord.lat, coord.lon]);
+        pt_point_item_to_html(item, pt_item);
 
     }
     if (newBounds) {map.fitBounds(newBounds)};
@@ -376,45 +345,15 @@ function showStopPointsHtml(){
     total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        coord=n.coord;
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label
+        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.explo_links = {"Parcours" : getNewURI('/routes/', true, n.id) ,"Zones d'arrêts" : getNewURI('/stop_areas/', true, n.id) , "Correspondances" : getNewURI('/connections/', true, n.id) , "Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
         var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='zoom_to_item("+coord.lat+","+coord.lon+", \""+n.id +"\")'>" + n.label + "</a>";
-        item.innerHTML += "<small>" + n.id + "</small>";
-        item.innerHTML += "<br><a href='"+getNewURI('/routes/', true, n.id)+"' > Parcours </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' >Zones d'arrêts </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/connections/', true, n.id)+"' > Correspondances </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/places_nearby/', true, n.id)+"' > Autour </a>"
-
-        n.marker = L.marker([coord.lat, coord.lon]);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        try {
-            s_city=n.administrative_regions[0].name;
-        }
-        catch (err) {
-            s_city="no_city";
-        }
-
-        n.marker.item_id = "item_" + n.id;
-
-        n.marker.on('click', function(e) {
-            map.panTo([e.latlng.lat, e.latlng.lng]);
-            item = document.getElementById(this.item_id);
-            setActive(item);
-            item.scrollIntoView();
-        });
-
-
-        n.marker.bindPopup(
-            "<b>"+n.name+"</b>"+
-            "<br />"+s_city+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-
-        map.addLayer(n.marker);
-        newBounds.push([coord.lat, coord.lon]);
+        pt_point_item_to_html(item, pt_item)
 
     }
     if (newBounds) {map.fitBounds(newBounds)};
@@ -485,47 +424,57 @@ function showPOIsHtml(){
     total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        coord=n.coord;
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label
+        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.explo_links = {"Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
         var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='zoom_to_item("+coord.lat+","+coord.lon+", \""+n.id +"\")'>" + n.label + "</a>";
-        item.innerHTML += "<small>" + n.id + "</small>";
-        item.innerHTML += "<br> <a href='"+getNewURI('/places_nearby/', true, n.id)+"' > Autour </a>"
-
-
-        n.marker = L.marker([coord.lat, coord.lon]);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        try {
-            s_city=n.administrative_regions[0].name;
-        }
-        catch (err) {
-            s_city="no_city";
-        }
-
-        n.marker.item_id = "item_" + n.id;
-
-        n.marker.on('click', function(e) {
-            map.panTo([e.latlng.lat, e.latlng.lng]);
-            item = document.getElementById(this.item_id);
-            setActive(item);
-            item.scrollIntoView();
-        });
-
-
-        n.marker.bindPopup(
-            "<b>"+n.name+"</b>"+
-            "<br />"+s_city+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-
-        map.addLayer(n.marker);
-        newBounds.push([coord.lat, coord.lon]);
+        pt_point_item_to_html(item, pt_item)
 
     }
     if (newBounds) {map.fitBounds(newBounds)};
 
+}
+
+function pt_point_item_to_html(html_elem, pt_info){
+  html_elem.className = 'item';
+  html_elem.innerHTML = "<a class='title' id='item_"+pt_info.id+"' onclick='zoom_to_item("+pt_info.lat+","+pt_info.lon+", \""+pt_info.id +"\")'>" + pt_info.label + "</a>";
+  html_elem.innerHTML += "<small>" + pt_info.id + "</small><br>";
+  for (var a_link in pt_info.explo_links){
+    html_elem.innerHTML += " <a href='"+pt_info.explo_links[a_link]+"' > "+ a_link +" </a> -"
+  }
+  html_elem.innerHTML = html_elem.innerHTML.slice(0,-1);
+
+  if (pt_info.worst_disruption){
+    html_elem.innerHTML += getSeverityIcon(pt_info.worst_disruption);
+  }
+
+  pt_info.marker = L.marker([pt_info.lat, pt_info.lon]);
+  lamb=WGS_ED50(pt_info.lon, pt_info.lat);
+
+  pt_info.marker.item_id = "item_" + pt_info.id;
+
+  pt_info.marker.on('click', function(e) {
+      map.panTo([e.latlng.lat, e.latlng.lng]);
+      html_elem = document.getElementById(this.item_id);
+      setActive(html_elem);
+      html_elem.scrollIntoView();
+  });
+
+
+  pt_info.marker.bindPopup(
+      "<b>"+pt_info.label+"</b>"+
+      "<br />"+pt_info.city+
+      "<br />Id: "+pt_info.id+
+      "<br />LatLon wgs84: "+pt_info.lat + ", "+ pt_info.lon+
+      "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
+  );
+
+  map.addLayer(pt_info.marker);
+  newBounds.push([pt_info.lat, pt_info.lon]);
 }
 
 function showPoiTypesHtml(){

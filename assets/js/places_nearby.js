@@ -1,19 +1,19 @@
 function show_places_html(){
     str='<table style="font-size:11px"><tr>';
-    str+='<th>Type</th>';
-    str+='<th>Object</th>';
     str+='<th>Distance</th>';
+    str+='<th>Type</th>';
+    str+='<th>Objet</th>';
     str+='</tr>';
     for (var i in places_nearby){
         n=places_nearby[i];
         s_str="<tr>";
+        s_str+='<td>'+n.distance + "</td>";
         if (n.embedded_type=="poi") {
             s_str+='<td>'+n.poi.poi_type.name + "</td>";
         } else {
             s_str+='<td>'+n.embedded_type + "</td>";
         }
         s_str+='<td>'+n.name + "</td>";
-        s_str+='<td>'+n.distance + "</td>";
         s_str+="</tr>\n";
         str+=s_str;
     }
@@ -75,7 +75,6 @@ function places_nearby_onLoad(){
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     L.control.scale().addTo(map);
-    map.on('click', onMapClick);
  }
 
 $(document).ready(function(){
