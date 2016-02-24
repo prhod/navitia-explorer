@@ -1,11 +1,3 @@
-function onMapClick(e) {
-    popup
-        .setLatLng(e.latlng)
-        .setContent("LatLon : " + e.latlng.lat + ", "+e.latlng.lng)
-        .openOn(map);
-}
-
-
 function show_places_html(){
     str='<table style="font-size:11px"><tr>';
     str+='<th>Type</th>';
@@ -58,12 +50,12 @@ function getPlacesNearby(uri, distance){
         }
         callNavitiaJS(ws_name, url, '', function(response){
             if (response.places_nearby) {
-                places_nearby = response.places_nearby; 
+                places_nearby = response.places_nearby;
                 show_places_html();
                 show_places_on_map();
             }
         });
-    
+
 }
 
 function places_nearby_onLoad(){
