@@ -327,8 +327,10 @@ function showStopAreasHtml(){
         pt_item.id = n.id;
         pt_item.lat = n.coord.lat;
         pt_item.lon = n.coord.lon;
-        pt_item.label = n.label
-        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.label = n.label;
+        pt_item.city = 'no city';
+        if (n.administrative_regions) {pt_item.city = n.administrative_regions[0].name;}
+
         pt_item.explo_links = {"Lignes" : getNewURI('/lines/', true, n.id) ,"Points d'arrêts" : getNewURI('/stop_points/', true, n.id) , "Prochains départs" : getNewURI('/departures/', true, n.id) ,"Correspondances" : getNewURI('/connections/', true, n.id), "Horaires" : "stop_schedules.html?ws_name="+ws_name+"&coverage="+coverage+"&stop_area_id="+n.id, "Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
         pt_item.worst_disruption = getWorstDisruption(n.links);
 
