@@ -301,6 +301,8 @@ function journey_onLoad() {
     document.getElementById("to").value = (t["to"])?t["to"]:"";
     document.getElementById("to_text").value = (t["to_text"])?t["to_text"]:"";
     document.getElementById("max_duration_to_pt").value = (t["max_duration_to_pt"])?t["max_duration_to_pt"]:"";
+    document.getElementById("metasystem").checked = (t["metasystem"])?t["metasystem"]=="on":false;
+    document.getElementById("metasystem_token").value = (t["metasystem_token"])?t["metasystem_token"]:""    ;
     
     document.getElementById("traveler_type").value = (t["traveler_type"])?t["traveler_type"]:"";
     
@@ -442,7 +444,11 @@ function init_date(sdate, sheure){
 function getItinerary(){
     //on vérifie si c'est une coordonnée dans le FROM
     clearMap();
-    url="coverage/"+document.getElementById("coverage").value+"/journeys?debug="+document.getElementById("debug").checked+
+    url = "";
+    if (!$('#metasystem')[0].checked) {
+        url+="coverage/"+document.getElementById("coverage").value + "/";
+    }
+    url+="journeys?debug="+document.getElementById("debug").checked+
         "&from="+document.getElementById("from").value+"&to="+document.getElementById("to").value+
         "&datetime="+natural_str_to_iso(document.getElementById("date").value,document.getElementById("time").value);
     url+="&min_nb_journeys="+document.getElementById("min_nb_journeys").value;
@@ -483,7 +489,14 @@ function getItinerary(){
         url += "&data_freshness=" + data_freshness
     }
     
-    callNavitiaJS(document.getElementById("ws_name").value, url, '', function(response){
+    forced_token = "";
+    if ($('#metasystem')[0].checked) {
+        if ($('#metasystem_token')[0].value != "") {
+            forced_token = $('#metasystem_token')[0].value;
+        }
+    }
+    
+    callNavitiaJS(document.getElementById("ws_name").value, url, forced_token, function(response){
         journey.journey_list=response.journeys;
         if (response.message) {
             journey.journey_error = {
@@ -549,4 +562,10 @@ $(document).ready(function(){
             document.getElementById("to").value = ui.item.id;
         }
     });
+
+   $( "#metasystem" ).click(function() {
+        if ($('#metasystem')[0].checked) {
+            $("#metasystem_token")[0].enabled = $('#metasystem')[0].checked;
+        }
+    });    
 });
