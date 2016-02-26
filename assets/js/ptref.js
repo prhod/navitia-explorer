@@ -3,7 +3,7 @@ ptref = function() {
     this.disruption_list=null,
     this.object_count=-1,
     this.object_type="",
-    this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports", "calendars" ],
+    this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports", "calendars", "contributors", "datasets" ],
     this.response = null,
     this.load = function(ws_name, coverage, uri, call_back){
         if (endsWith(uri, "/departures/")) {
@@ -167,6 +167,45 @@ function showNetworksHtml(){
     }
 }
 
+function showContributorsHtml(){
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
+    for (var i in ptref.object_list){
+        n=ptref.object_list[i];
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small><br>";
+        item.innerHTML += "<small>licence : " + ((n.license)?n.license : "pas de licence") + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/datasets/', true, n.id)+"' > Datasets </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/networks/', true, n.id)+"' > Réseaux </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
+        worst_disruption = getWorstDisruption(n.links);
+        item.innerHTML += getSeverityIcon(worst_disruption);
+    }
+}
+
+function showDatasetsHtml(){
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
+    for (var i in ptref.object_list){
+        n=ptref.object_list[i];
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.description + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small><br>";
+        item.innerHTML += "<small>" + NavitiaDateTimeToString(n.start_validation_date, "dd/mm/yyyy") + " - " + NavitiaDateTimeToString(n.end_validation_date, "dd/mm/yyyy") + "</small><br>";
+        item.innerHTML += "<small>Type (TH / AD) : " + n.realtime_level + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/networks/', true, n.id)+"' > Réseaux </a>"
+        worst_disruption = getWorstDisruption(n.links);
+        item.innerHTML += getSeverityIcon(worst_disruption);
+    }
+}
+
 
 function showCalendarsHtml(){
     var ptref_div = document.getElementById('ptref_content');
@@ -174,11 +213,13 @@ function showCalendarsHtml(){
     total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
       n=ptref.object_list[i];
+      title = calendar_to_str(n);
       var item = ptref_div.appendChild(document.createElement('div'));
       item.className = 'item';
-      item.innerHTML = "<a class='title'>" + n.name + "</a>";
-      item.innerHTML += "<small>" + n.id + "</small>";
-      item.innerHTML += "<br><a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
+      item.innerHTML = "<a class='title' title='" + title +"'>" + n.name + "</a>";
+      item.innerHTML += "<small>" + n.id + "</small><br>";
+      item.innerHTML += '<small><span title="'+title+'">Voir le contenu</span></small>';
+      item.innerHTML += " - <a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
     }
 }
 
@@ -737,6 +778,10 @@ function showObjectHtml(ptref){
         showCalendarsHtml();
     } else if (ptref.object_type == "networks") {
         showNetworksHtml();
+    } else if (ptref.object_type == "contributors") {
+        showContributorsHtml();
+    } else if (ptref.object_type == "datasets") {
+        showDatasetsHtml();
     } else {
         showErrorHtml();
     }
