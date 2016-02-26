@@ -446,9 +446,9 @@ function getItinerary(){
     clearMap();
     url = "";
     if (!$('#metasystem')[0].checked) {
-        url+="coverage/"+document.getElementById("coverage").value;
+        url+="coverage/"+document.getElementById("coverage").value + "/";
     }
-    url+="/journeys?debug="+document.getElementById("debug").checked+
+    url+="journeys?debug="+document.getElementById("debug").checked+
         "&from="+document.getElementById("from").value+"&to="+document.getElementById("to").value+
         "&datetime="+natural_str_to_iso(document.getElementById("date").value,document.getElementById("time").value);
     url+="&min_nb_journeys="+document.getElementById("min_nb_journeys").value;
