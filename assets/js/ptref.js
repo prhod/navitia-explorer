@@ -131,53 +131,55 @@ function getNewURI(changed_uri, keep_current, current_id) {
     return new_uri;
 }
 
+function zoom_to_item(lat, lon, _id){
+      map.setView([lat,lon],19);
+      item = document.getElementById("item_" + _id);
+      setActive(item);
+}
+
+function setActive(el) {
+    var ptref_div = document.getElementById('ptref_content');
+    var all_items = ptref_div.getElementsByTagName('div');
+    for (var i = 0; i < all_items.length; i++) {
+      all_items[i].className = all_items[i].className
+      .replace(/active/, '').replace(/\s\s*$/, '');
+    }
+    el.parentNode.className += ' active';
+}
+
 function showNetworksHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='<th></th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('/networks/'+n.id+'/', false, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/physical_modes/', true, n.id)+'">Modes Ph</a></td>';
-        s_str+='<td><a href="'+getNewURI('/commercial_modes/', true, n.id)+'">Modes Co</a></td>';
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lines</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
         worst_disruption = getWorstDisruption(n.links);
-        s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
-        s_str+="</tr>\n";
-        str+=s_str;
+        item.innerHTML += getSeverityIcon(worst_disruption);
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
 }
 
 
-
 function showCalendarsHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('/calendars/'+n.id+'/', false, n.id)+'">'+n.id+'</a></td>';
-        title = calendar_to_str(n);
-        s_str+='<td><span title="'+title+'">'+n.name + "</span></td>";
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lines</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
+      n=ptref.object_list[i];
+      var item = ptref_div.appendChild(document.createElement('div'));
+      item.className = 'item';
+      item.innerHTML = "<a class='title'>" + n.name + "</a>";
+      item.innerHTML += "<small>" + n.id + "</small>";
+      item.innerHTML += "<br><a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
 }
 
 function showTrafficReportsHtml(){
@@ -296,112 +298,66 @@ function showTrafficReportsHtml(){
 }
 
 function showModesHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td>'+n.id + "</td>";
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
+        worst_disruption = getWorstDisruption(n.links);
+        item.innerHTML += getSeverityIcon(worst_disruption);
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
 }
 
 function showStopAreasHtml(){
     newBounds=[];
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Label</th>';
-    str+='<th>Explorer</th>';
-    str+='<th></th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.label + "</td>";
-        s_str+='</td>';
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_points/', true, n.id)+'">StopPoints</a></td>';
-        s_str+='<td><a href="'+getNewURI('/connections/', true, n.id)+'">Corresp.</a></td>';
-        s_str+='<td><a href="'+getNewURI('/departures/', true, n.id)+'">Depart.</a></td>';
-        s_str+='<td><a href="stop_schedules.html?ws_name='+ws_name+'&coverage='+coverage+'&stop_area_id='+n.id+'">Horaires</a></td>';
-        s_str+='<td><a href="'+getNewURI('/places_nearby/', true, n.id)+'">Nearby</a></td>';
-        worst_disruption = getWorstDisruption(n.links);
-        s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        coord=n.coord;
-        n.marker = L.marker([coord.lat, coord.lon]).addTo(map);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        try {
-            s_city=n.administrative_regions[0].name;
-        }
-        catch (err) {
-            s_city="no_city";
-        }
+        var item = ptref_div.appendChild(document.createElement('div'));
 
-        n.marker.bindPopup(
-            "<b>"+n.name+"</b>"+
-            "<br />"+s_city+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-        map.addLayer(n.marker);
-        if (i==0) { map.setView([coord.lat, coord.lon]);}
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label;
+        pt_item.city = 'no city';
+        if (n.administrative_regions) {pt_item.city = n.administrative_regions[0].name;}
 
-        newBounds.push([coord.lat, coord.lon]);
+        pt_item.explo_links = {"Lignes" : getNewURI('/lines/', true, n.id) ,"Points d'arrêts" : getNewURI('/stop_points/', true, n.id) , "Prochains départs" : getNewURI('/departures/', true, n.id) ,"Correspondances" : getNewURI('/connections/', true, n.id), "Horaires" : "stop_schedules.html?ws_name="+ws_name+"&coverage="+coverage+"&stop_area_id="+n.id, "Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
+        pt_item.worst_disruption = getWorstDisruption(n.links);
+
+        pt_point_item_to_html(item, pt_item);
+
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
 }
 
 function showStopPointsHtml(){
     newBounds=[];
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Label</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.label + "</td>";
-        s_str+='<td><a href="'+getNewURI('/lines/', true, n.id)+'">Lignes</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_areas/'+n.stop_area.id+'/', true, n.id)+'">StopArea</a></td>';
-        s_str+='<td><a href="'+getNewURI('/connections/', true, n.id)+'">Corresp.</a></td>';
-        s_str+='<td><a href="'+getNewURI('/departures/', true, n.id)+'">Depart.</a></td>';
-        s_str+='<td><a href="'+getNewURI('/places_nearby/', true, n.id)+'">Nearby</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        coord=n.coord;
-        n.marker = L.marker([coord.lat, coord.lon]).addTo(map);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        n.marker.bindPopup("<b>"+n.name+"</b>"+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-        map.addLayer(n.marker);
-        if (i==0) { map.setView([coord.lat, coord.lon]);}
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label
+        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.explo_links = {"Parcours" : getNewURI('/routes/', true, n.id) ,"Zones d'arrêts" : getNewURI('/stop_areas/', true, n.id) , "Correspondances" : getNewURI('/connections/', true, n.id) , "Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
+        var item = ptref_div.appendChild(document.createElement('div'));
+        pt_point_item_to_html(item, pt_item)
 
-        newBounds.push([coord.lat, coord.lon]);
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
 }
 
@@ -465,57 +421,77 @@ function showErrorHtml(){
 
 function showPOIsHtml(){
     newBounds=[];
-    str="";
-    str+='<table><tr>';
-    //str+='<th>Id (Nb : ' + ptref.object_list.length + ')</th>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Label</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.label + "</td>";
-        s_str+='<td><a href="'+getNewURI('/places_nearby/', true, n.id)+'">Nearby</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        coord=n.coord;
-        n.marker = L.marker([coord.lat, coord.lon]).addTo(map);
-        lamb=WGS_ED50(coord.lon, coord.lat);
-        n.marker.bindPopup("<b>"+n.name+"</b>"+
-            "<br />Id: "+n.id+
-            "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
-            "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
-        );
-        map.addLayer(n.marker);
-        if (i==0) { map.setView([coord.lat, coord.lon]);}
+        pt_item = {};
+        pt_item.id = n.id;
+        pt_item.lat = n.coord.lat;
+        pt_item.lon = n.coord.lon;
+        pt_item.label = n.label
+        pt_item.city = n.administrative_regions[0].name || 'no city';
+        pt_item.explo_links = {"Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
+        var item = ptref_div.appendChild(document.createElement('div'));
+        pt_point_item_to_html(item, pt_item)
 
-        newBounds.push([coord.lat, coord.lon]);
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
+
+}
+
+function pt_point_item_to_html(html_elem, pt_info){
+  html_elem.className = 'item';
+  html_elem.innerHTML = "<a class='title' id='item_"+pt_info.id+"' onclick='zoom_to_item("+pt_info.lat+","+pt_info.lon+", \""+pt_info.id +"\")'>" + pt_info.label + "</a>";
+  html_elem.innerHTML += "<small>" + pt_info.id + "</small><br>";
+  for (var a_link in pt_info.explo_links){
+    html_elem.innerHTML += " <a href='"+pt_info.explo_links[a_link]+"' > "+ a_link +" </a> -"
+  }
+  html_elem.innerHTML = html_elem.innerHTML.slice(0,-1);
+
+  if (pt_info.worst_disruption){
+    html_elem.innerHTML += getSeverityIcon(pt_info.worst_disruption);
+  }
+
+  pt_info.marker = L.marker([pt_info.lat, pt_info.lon]);
+  lamb=WGS_ED50(pt_info.lon, pt_info.lat);
+
+  pt_info.marker.item_id = "item_" + pt_info.id;
+
+  pt_info.marker.on('click', function(e) {
+      map.panTo([e.latlng.lat, e.latlng.lng]);
+      html_elem = document.getElementById(this.item_id);
+      setActive(html_elem);
+      html_elem.scrollIntoView();
+  });
+
+
+  pt_info.marker.bindPopup(
+      "<b>"+pt_info.label+"</b>"+
+      "<br />"+pt_info.city+
+      "<br />Id: "+pt_info.id+
+      "<br />LatLon wgs84: "+pt_info.lat + ", "+ pt_info.lon+
+      "<br />LatLon l2E: "+lamb[0] + ", "+ lamb[1]
+  );
+
+  map.addLayer(pt_info.marker);
+  newBounds.push([pt_info.lat, pt_info.lon]);
 }
 
 function showPoiTypesHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/pois/', true, n.id)+'">POIs</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title'>" + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/pois/', true, n.id)+"' > POIs </a>"
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
 }
 
 function setConnectionFilter(){
@@ -626,41 +602,41 @@ function showConnectionsHtml(){
 }
 
 function showLinesHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Code</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='<th></th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     newBounds=false;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+"<span class='icon-ligne' style='background-color: #"+n.color+";'>"+n.code + "</span>" +"</td>";
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/physical_modes/', true, n.id)+'">Modes Ph</a></td>';
-        s_str+='<td><a href="'+getNewURI('/commercial_modes/', true, n.id)+'">Modes Co</a></td>';
-        s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
-        s_str+='<td><a href="'+getNewURI('/routes/', true, n.id)+'">Routes</a></td>';
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='setActive(this)'><span class='icon-ligne' style='background-color: #"+n.color+";'>"+n.code + "</span> : " + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/calendars/', true, n.id)+"' > Calendriers </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/routes/', true, n.id)+"' > Parcours </a>"
         worst_disruption = getWorstDisruption(n.links);
-        s_str+='<td>'+getSeverityIcon(worst_disruption)+'</td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        //on trace la ligne sur la carte
+        item.innerHTML += getSeverityIcon(worst_disruption);
         if (n.geojson.coordinates.length>0) {
             drawOptions={color:"#"+n.color, opacity:1, weight:3};
             n.layer=L.geoJson(n.geojson, drawOptions).addTo(map);
+            n.geojson.item_id = "item_" + n.id;
+            n.layer.eachLayer(function(locale) {
+                locale.on('click', function(e) {
+                    map.fitBounds(locale.getBounds());
+                    item = document.getElementById(locale.feature.geometry.item_id);
+                    setActive(item);
+                    item.scrollIntoView()
+                  });
+            })
             if (!newBounds) {newBounds=n.layer.getBounds();}
             else {newBounds=newBounds.extend(n.layer.getBounds());}
         }
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
-    //if (this.network_list){this.showNetworkOnMap(this.network_list[0]);}
 }
 
 function showVehicleJourneysHtml(){
@@ -681,7 +657,7 @@ function showVehicleJourneysHtml(){
         for (var j in n.calendars){
             c = n.calendars[j];
             hint = calendar_to_str(c);
-            if (j > 0) s_str+= "<br>";  
+            if (j > 0) s_str+= "<br>";
             label = calendar_operating_days_to_str(c);
             s_str+='<span title="'+hint+'">'+ label + "</span>";
         }
@@ -697,36 +673,39 @@ function showVehicleJourneysHtml(){
 }
 
 function showRoutesHtml(){
-    str="";
-    str+='<table><tr>';
-    str+='<th>Id (Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count + ')</th>';
-    str+='<th>Code</th>';
-    str+='<th>Name</th>';
-    str+='<th>Explorer</th>';
-    str+='</tr>';
+    var ptref_div = document.getElementById('ptref_content');
+    var total = ptref_div.appendChild(document.createElement('div'));
+    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     newBounds=false;
+
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
-        s_str="<tr>";
-        s_str+='<td><a href="'+getNewURI('', true, n.id)+'">'+n.id+'</a></td>';
-        s_str+='<td>'+"<span class='icon-ligne' style='background-color: #"+n.color+";'>"+n.code + "</span>" +"</td>";
-        s_str+='<td>'+n.name + "</td>";
-        s_str+='<td><a href="'+getNewURI('/stop_areas/', true, n.id)+'">Zones d\'arrêts</a></td>';
-        s_str+='<td><a href="'+getNewURI('/vehicle_journeys/', true, n.id)+'">Courses</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        //on trace le parcours sur la carte
+        var item = ptref_div.appendChild(document.createElement('div'));
+        item.className = 'item';
+        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='setActive(this)'><span class='icon-ligne' style='background-color: #"+n.line.color+";'>"+n.line.code + "</span> : " + n.name + "</a>";
+        item.innerHTML += "<small>" + n.id + "</small>";
+        item.innerHTML += "<br><a href='"+getNewURI('/stop_points/', true, n.id)+"' > Points d'arrêts </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
+        item.innerHTML += "- <a href='"+getNewURI('/vehicle_journeys/', true, n.id)+"' > Circulations </a>"
+        worst_disruption = getWorstDisruption(n.links);
+        item.innerHTML += getSeverityIcon(worst_disruption);
         if (n.geojson.coordinates.length>0) {
-            drawOptions={color:"#"+n.line.color, opacity:1, weight:3};
+            drawOptions={color:"#"+n.color, opacity:1, weight:3};
             n.layer=L.geoJson(n.geojson, drawOptions).addTo(map);
+            n.geojson.item_id = "item_" + n.id;
+            n.layer.eachLayer(function(locale) {
+                locale.on('click', function(e) {
+                    map.fitBounds(locale.getBounds());
+                    item = document.getElementById(locale.feature.geometry.item_id);
+                    setActive(item);
+                    item.scrollIntoView()
+                  });
+            })
             if (!newBounds) {newBounds=n.layer.getBounds();}
             else {newBounds=newBounds.extend(n.layer.getBounds());}
-        }
+       }
     }
-    str+='</table>'
-    document.getElementById('ptref_content').innerHTML=str;
     if (newBounds) {map.fitBounds(newBounds)};
-    //if (this.network_list){this.showNetworkOnMap(this.network_list[0]);}
 }
 
 function showObjectHtml(ptref){

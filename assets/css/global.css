@@ -1,4 +1,4 @@
-body {font-size: 62.5%;
+body {font-size: 12px;
     font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
 }
 ul.title {
@@ -62,4 +62,57 @@ ul li a:hover {
 .footer{
     text-align : center;
     font-size: 14px;
+}
+h2{
+    text-align : center;
+    font-size: 14px;
+}
+h1{
+    text-align : center;
+}
+
+/*style pour virer les tableaux */
+section {
+    display: inline-block;
+    vertical-align: top;
+    width : 49%;
+    margin : auto;
+}
+
+section.first_half {
+    min-width: 500px;
+    max-height : 500px;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: 0px;
+}
+section.second_half {
+    min-width: 500px;
+    max-height : 500px;
+    padding-left: 2px;
+}
+ 
+ 
+.map-canvas {
+    height : 100%;
+    width: 100%;
+    max-height : 500px;
+}
+.item{
+    padding:5px;
+    font-size: 12px;
+    border-width: 1px;
+    border-style: none none solid none;
+}
+
+.item .title {
+    display:block;
+    color: #EA6612  ;
+    font-weight:700;
+}
+.item .title small { font-weight:400; }
+.item.active .title,
+.item .title:hover { color:#BAB431; }
+.item .active {
+background-color:#f8f8f8;
 }
