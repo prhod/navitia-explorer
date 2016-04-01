@@ -472,7 +472,10 @@ function showPOIsHtml(){
         pt_item.lat = n.coord.lat;
         pt_item.lon = n.coord.lon;
         pt_item.label = n.label
-        pt_item.city = n.administrative_regions[0].name || 'no city';
+        if (n.administrative_regions) {
+            pt_item.city = n.administrative_regions[0].name || 'no city';
+        } else 
+            pt_item.city = "";
         pt_item.explo_links = {"Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
         var item = ptref_div.appendChild(document.createElement('div'));
         pt_point_item_to_html(item, pt_item)
