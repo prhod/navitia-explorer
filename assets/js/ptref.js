@@ -478,7 +478,7 @@ function showPOIsHtml(){
         pt_item.label = n.label
         if (n.administrative_regions) {
             pt_item.city = n.administrative_regions[0].name || 'no city';
-        } else 
+        } else
             pt_item.city = "";
         pt_item.explo_links = {"Autour" : getNewURI('/places_nearby/', true, pt_item.id)}
         var item = ptref_div.appendChild(document.createElement('div'));
@@ -665,6 +665,7 @@ function showLinesHtml(){
         var item = ptref_div.appendChild(document.createElement('div'));
         item.className = 'item';
         item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='setActive(this)'><span class='icon-ligne' style='background-color: #"+n.color+";'>"+n.code + "</span> : " + n.name + "</a>";
+        item.innerHTML += pt_item_id_to_html(n.id);
         item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"
         item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
         item.innerHTML += "- <a href='"+getNewURI('/calendars/', true, n.id)+"' > Calendriers </a>"
