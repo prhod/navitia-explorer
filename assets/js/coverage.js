@@ -27,7 +27,6 @@ function print_coveragelist_status(cov_list){
     for (var i in cov_list){
         r=cov_list[i];
         var myDate = r.end_production_date?IsoToJsDate(r.end_production_date):now;
-        //alert(myDate);
         str+="<tr>";
         ws_name = (t["ws_name"])?t["ws_name"]:"";
         link = "<a href='./ptref.html?ws_name=" + ws_name + "&coverage=" + r.region_id + "'>" + r.region_id + "</a>" + "&nbsp;";
@@ -35,16 +34,7 @@ function print_coveragelist_status(cov_list){
         str+="<td>" + r.status+"</td>";
         str+="<td>" + r.start_production_date+"</td>";
         str+="<td>";
-        dstr=r.end_production_date + " (" + dateDiff(myDate,now)+")"
-        if (dateDiff(myDate,now) > 21) {
-            str+="<span style=''>" + dstr+"</span>";
-        } else  {
-            if (dateDiff(myDate,now) > 7) {
-                str+="<span style='color:#666600;'>" + dstr+"</span>";
-            } else {
-                str+="<span style='color:red;'>" + dstr+"</span>";
-            }
-        }
+        str+="<span style='" + DateToColor(myDate) + "'>" + r.end_production_date + " (" + dateDiff(myDate,now)+")</span>";
         str+="</td>";
         str+="<td>" + NavitiaDateTimeToString(r.publication_date, 'yyyymmdd hh:nn') +"</td>";
         str+="<td align='center'>" + NavitiaDateTimeToString(r.last_load_at, 'yyyymmdd hh:nn') +"</td>";
@@ -77,7 +67,7 @@ function get_shapes_and_show_on_map(){
         show_coveragelist_on_map();
     });
 }
-    
+
 function coverage_onLoad() {
     menu.show_menu("menu_div");
     t=extractUrlParams();
@@ -92,7 +82,7 @@ function coverage_onLoad() {
         print_coveragelist_status(coverages);
     });
 }
-        
+
 
 function focusRegion(region_id){
     showOnMap(region_id);
@@ -102,7 +92,7 @@ function focusRegion(region_id){
             map.setCenter(geojsonToGmap(r.shape)[0]);
         }
     }
-}    
+}
 
 function show_coveragelist_on_map(){
     for (var i in map_polygons){map.removeLayer(map_polygons[i]);}

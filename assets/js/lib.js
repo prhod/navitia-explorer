@@ -166,7 +166,7 @@ function natural_str_to_iso(date, time) {
 
 function strtodatetime(str){
     //20140217T134500
-    //new Date(year, month, day, hours, minutes, seconds, milliseconds); 
+    //new Date(year, month, day, hours, minutes, seconds, milliseconds);
     y=parseInt(str.substring(0,4));
     m=parseInt(str.substring(4,6));
     d=parseInt(str.substring(6,8));
@@ -188,7 +188,7 @@ var formatDate = function (formatDate, formatString) {
         var mm = m < 10 ? "0" + m : m;
         var d = formatDate.getDate();
         var dd = d < 10 ? "0" + d : d;
-        
+
         var h = formatDate.getHours();
         var hh = h < 10 ? "0" + h : h;
         var n = formatDate.getMinutes();
@@ -222,19 +222,33 @@ function NavitiaDateTimeToString(sDateTime, formatString){
     return formatDate(d, formatString);
 }
 
+function DateToColor(aDate){
+  var now = new Date();
+  if (dateDiff(aDate,now) > 21) {
+      color = '';
+  } else  {
+      if (dateDiff(aDate,now) > 7) {
+          color = 'color:orange;';
+      } else {
+          color = 'color:red;';
+      }
+  }
+  return color;
+}
+
 function IsoToJsDate(chaine){
-    //20140302T120600 
-    //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds); 
+    //20140302T120600
+    //var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
     var y = chaine.substring(0,4);
     var m = chaine.substring(4,6);
-    var d = chaine.substring(6,8);    
-    var h = chaine.substring(9,11);    
+    var d = chaine.substring(6,8);
+    var h = chaine.substring(9,11);
     var n = chaine.substring(11,13);
     var s = chaine.substring(13,15);
     if (h == "") {
-        return new Date(y, m-1, d, 0, 0, 0, 0); 
-    } else {    
-        return new Date(y, m-1, d, h, n, s, 0); 
+        return new Date(y, m-1, d, 0, 0, 0, 0);
+    } else {
+        return new Date(y, m-1, d, h, n, s, 0);
     }
 }
 
@@ -358,14 +372,14 @@ function calendar_to_str(calendar){
     title = "";
     for (var j in calendar.active_periods){
         p = calendar.active_periods[j];
-        title += "du "+ p.begin + " au " + p.end + "\n"; 
+        title += "du "+ p.begin + " au " + p.end + "\n";
     }
     title += "jours : " + calendar_operating_days_to_str(calendar) + "\n";
     //on ajoute les exceptions
     if (calendar.exceptions) {
         for (var j in calendar.exceptions){
             e = calendar.exceptions[j];
-            title += e.type + " "+ e.datetime + "\n"; 
+            title += e.type + " "+ e.datetime + "\n";
         }
     }
     return title;
