@@ -201,7 +201,8 @@ function showDatasetsHtml(){
         item.innerHTML = "<a class='title'>" + n.description + "</a>";
         item.innerHTML += pt_item_id_to_html(n.id);
         item.innerHTML += "<br>";
-        item.innerHTML += "<small>" + NavitiaDateTimeToString(n.start_validation_date, "dd/mm/yyyy") + " - " + NavitiaDateTimeToString(n.end_validation_date, "dd/mm/yyyy") + "</small><br>";
+        var myDate = n.end_validation_date?IsoToJsDate(n.end_validation_date):now;
+        item.innerHTML += "<small>" + NavitiaDateTimeToString(n.start_validation_date, "dd/mm/yyyy") + " - <span style='"+DateToColor(myDate) + "'>" +NavitiaDateTimeToString(n.end_validation_date, "dd/mm/yyyy") + "</span></small><br>";
         item.innerHTML += "<small>Type (TH / AD) : " + n.realtime_level + "</small>";
         item.innerHTML += "<br><a href='"+getNewURI('/networks/', true, n.id)+"' > Réseaux </a>"
         worst_disruption = getWorstDisruption(n.links);
