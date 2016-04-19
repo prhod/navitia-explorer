@@ -104,11 +104,22 @@ function callApiJS_withParams(token, url, callBack){
 }
 
 getAutoComplete = function (request, response) {
+    var metasystem = document.getElementById("metasystem").checked;
+    if (metasystem)
+    {
+      complete_url = document.getElementById("navitia_api").value + "/places?";
+      var api_key = document.getElementById("metasystem_token")?document.getElementById("metasystem_token"):document.getElementById("token").value;
+    }
+    else
+    {
+      complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?";
+      var api_key = document.getElementById("token").value;
+    }
+
     $.ajaxSetup( {
-        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(api_key + ":" )); }
     });
 
-    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?"
     $.ajax({
         url: complete_url,
         dataType: "json",
