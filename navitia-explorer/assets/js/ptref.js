@@ -744,7 +744,7 @@ function showRoutesHtml(){
         worst_disruption = getWorstDisruption(n.links);
         item.innerHTML += getSeverityIcon(worst_disruption);
         if (n.geojson.coordinates.length>0) {
-            drawOptions={color:"#"+n.color, opacity:1, weight:3};
+            drawOptions={color:"#"+n.line.color, opacity:1, weight:3};
             n.layer=L.geoJson(n.geojson, drawOptions).addTo(map);
             n.geojson.item_id = "item_" + n.id;
             n.layer.eachLayer(function(locale) {

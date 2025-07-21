@@ -84,7 +84,8 @@ function callTyrJS(ws_name, service_url, callBack){
 function callApiJS_withParams(token, url, callBack){
     if (token != '') {
         $.ajaxSetup( {
-            beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
+            // beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
+            beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", token ); }
         });
     }
 
