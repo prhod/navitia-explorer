@@ -1,5 +1,6 @@
 body {font-size: 12px;
     font-family: "Trebuchet MS", "Helvetica", "Arial",  "Verdana", "sans-serif";
+    max-height: 100%;    
 }
 ul.title {
     padding:0;
@@ -119,4 +120,19 @@ section.second_half {
 .item .title:hover { color:#BAB431; }
 .item .active {
 background-color:#f8f8f8;
+}
+
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  background-color: #767777;
+  color: #fff;
+}
+
+.global-container {
+    margin-bottom: 60px;
+    position: relative;
+    min-height: 70%;    
 }

@@ -61,25 +61,15 @@ function validateJSON(jsonText)
 } // validateJSON(jsonText)
 
 
-function callNavitiaJS(ws_name, service_url, forced_token, callBack){
-    $.getJSON('./params.json', function(params) {
-        ws_name = (ws_name == "") ? params.default.environnement : ws_name;
-        base_url = params.environnements[ws_name].url;
-        if (forced_token != "") {
-            callApiJS_withParams(forced_token, base_url + service_url, callBack);
-        } else {
-            callApiJS_withParams(params.environnements[ws_name].key, base_url + service_url, callBack);
-        }
-    });
+function callNavitiaJS_v2(NavitiaConfig, navitia_service_url, callBack){
+    const currentUrl = new URL(document.location);
+    callApiJS_withParams(
+        NavitiaConfig["Token"], 
+        `${currentUrl.protocol}//${currentUrl.host}/${NavitiaConfig["NavitiaURL"]}/${navitia_service_url}`, 
+        callBack
+    );
 }
 
-function callTyrJS(ws_name, service_url, callBack){
-    $.getJSON('./params.json', function(params) {
-        ws_name = (ws_name == "") ? params.default.environnement : ws_name;
-        base_url = params.environnements[ws_name].tyr;
-        callApiJS_withParams('', base_url + service_url, callBack);
-    });
-}
 
 function callApiJS_withParams(token, url, callBack){
     if (token != '') {
@@ -121,27 +111,6 @@ getAutoComplete = function (request, response) {
         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(api_key + ":" )); }
     });
 
-    $.ajax({
-        url: complete_url,
-        dataType: "json",
-        data: { q: request.term },
-        success: function( data ) {
-            ListData = [];
-            for (var i = 0; i < data['places'].length; i++) {
-                //ListData.push(data['places'][i]['name'])
-                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
-            }
-            response(ListData);
-        }
-    });
-}
-
-getAutoComplete_StopArea = function (request, response) {
-    $.ajaxSetup( {
-        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(document.getElementById("token").value + ":" )); }
-    });
-
-    complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?type[]=stop_area"
     $.ajax({
         url: complete_url,
         dataType: "json",
@@ -396,3 +365,9 @@ function calendar_to_str(calendar){
     }
     return title;
 }
+
+function getConfigByName(configName) {
+    const configList = JSON.parse(localStorage.getItem('config')) || [];
+    var currentConf = configList.find((element) => element["Name"] == configName);
+    return currentConf;
+};

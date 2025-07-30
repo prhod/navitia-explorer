@@ -292,7 +292,6 @@ function onMapClick(e) {
 }
 
 function journey_onLoad() {
-    menu.show_menu("menu_div");
     t=extractUrlParams();
 
     init_date();

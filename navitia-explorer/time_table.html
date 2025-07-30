@@ -5,9 +5,9 @@
     <link rel="stylesheet" href="./assets/leaflet_0.7.7/leaflet.css" />
 </head>
 <body onload="time_table_onLoad();">
+    <title-bar></title-bar>
     <div id="params_div"></div>
         <form name="form">
-            <div id="menu_div"></div>
             <input type="hidden" id="uri" name="uri" value="">
             <div id="params">
                 <div id="network_div" style="display:inline;"></div>
@@ -32,14 +32,10 @@
             </tr>
         </table>
     </div>
-    <div id="footer" class="footer">
-        github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>            
-        <a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
-        <a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
-    </div>    
+    <footer></footer>
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
-    <script type="text/javascript" src="./assets/js/menu.js"></script>
+    <script type="text/javascript" src="components/titleBar.js"></script>
     <script type="text/javascript" src="./assets/js/lib.js"></script>
     <script type="text/javascript" src="./assets/js/conversion.js"></script>
     <script type="text/javascript" src="./assets/js/time_table.js"></script>

@@ -5,7 +5,11 @@ ptref = function() {
     this.object_type="",
     this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports", "calendars", "contributors", "datasets" ],
     this.response = null,
-    this.load = function(ws_name, coverage, uri, call_back){
+    this.load = function(config_name, uri, call_back){
+        var currentConf = getConfigByName(config_name);
+        
+        ws_name = currentConf["NavitiaURL"];
+        coverage = currentConf["Coverage"];
         if (endsWith(uri, "/departures/")) {
             navitia_call="coverage/"+coverage+uri+"?count=20";
             this.object_type = "departures";
@@ -25,7 +29,7 @@ ptref = function() {
                 }
             }
         }
-        callNavitiaJS(ws_name, navitia_call, '', function(response){
+        callNavitiaJS_v2(currentConf, navitia_call, function(response){
             ptref.response = response;
             var names = Object.keys( response );
             if (ptref.object_type == "") {ptref.object_type=names[2];}
@@ -96,10 +100,10 @@ function changeFormDataSubmit(){
 }
 
 function changeURI(base_uri, object_id, uri_end) {
-    new_uri=base_uri+object_id+uri_end;
+    new_uri = base_uri+object_id+uri_end;
     new_uri = new_uri.replace('%2F', '/');
     new_uri = new_uri.replace('//', '/');
-    document.getElementById("uri").value=new_uri;
+    document.getElementById("uri").value = new_uri;
     document.forms[0].submit();
 }
 
@@ -655,6 +659,36 @@ function showConnectionsHtml(){
     if (newBounds) {map.fitBounds(newBounds)};
 }
 
+function showLinesInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        columns: [
+            { title: 'Code', data: 'code', render: function  (data, type, row) {
+                return "<span class='icon-ligne' style='background-color: #"+row.color+";'>"+row.code + "</span>";
+            } },
+            { title: 'Name' , data: 'name' },
+            { title: 'Commercial Mode', data: 'commercial_mode.name' },
+            { title: 'Physical Modes', render: function  (data, type, row) {
+                var result = "";
+                for (pm of row.physical_modes) {
+                    result += pm.name + '\n';
+                }
+                return result;
+            } },                
+            { title: 'Links', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/lines/${row.id}/routes`);
+                let result = `<a href="${currentUrlTmp.toString()}" target="_blank">Routes</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/lines/${row.id}/stop_areas`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">StopAreas</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/lines/${row.id}/stop_points`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">StopPoints</a>`;
+                return result;
+            } },                
+        ],
+        data: ptref.object_list
+    });       
+}
+
 function showLinesHtml(){
     var ptref_div = document.getElementById('ptref_content');
     var total = ptref_div.appendChild(document.createElement('div'));
@@ -731,6 +765,11 @@ function showRoutesHtml(){
     var total = ptref_div.appendChild(document.createElement('div'));
     total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
     newBounds=false;
+    const currentUrl = new URL(document.location);
+    currentUrl.pathname = '/route_schedules.html';
+    config = currentUrl.searchParams.get('config');
+    currentUrl.search = "";
+    currentUrl.searchParams.set('config', config);
 
     for (var i in ptref.object_list){
         n=ptref.object_list[i];
@@ -741,6 +780,9 @@ function showRoutesHtml(){
         item.innerHTML += "<br><a href='"+getNewURI('/stop_points/', true, n.id)+"' > Points d'arrêts </a>"
         item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
         item.innerHTML += "- <a href='"+getNewURI('/vehicle_journeys/', true, n.id)+"' > Circulations </a>"
+        currentUrl.searchParams.set('line_id', n.line.id);
+        currentUrl.searchParams.set('route_id', n.id);
+        item.innerHTML += `- <a href="${currentUrl.toString()}" > Route_schedule </a>`
         worst_disruption = getWorstDisruption(n.links);
         item.innerHTML += getSeverityIcon(worst_disruption);
         if (n.geojson.coordinates.length>0) {
@@ -765,6 +807,7 @@ function showRoutesHtml(){
 function showObjectHtml(ptref){
     if (ptref.object_type == "lines") {
         showLinesHtml();
+        showLinesInTable();
     } else if ( (ptref.object_type == "physical_modes") || (ptref.object_type == "commercial_modes") ) {
         showModesHtml();
     } else if (ptref.object_type == "stop_areas") {
@@ -824,13 +867,20 @@ function showAriane(uri){
     return object_type;
 }
 
+
 function ptref_onLoad(){
-    menu.show_menu("menu_div");
-    t=extractUrlParams();
-    uri=(t["uri"])?t["uri"]:"";
+    const currentUrl = new URL(document.location);
+    if (! currentUrl.searchParams.get('uri')) {
+        currentUrl.searchParams.set('uri', '/networks/');
+        window.location = currentUrl.toString();
+    };
+
+    // t=extractUrlParams();
+    // uri=(t["uri"])?t["uri"]:"";
+    uri = currentUrl.searchParams.get('uri') || "";
     document.getElementById("uri").value = uri;
-    if (uri=="") {
-        document.getElementById("uri").value="/networks/";
+    if (uri == "") {
+        document.getElementById("uri").value = "/networks/";
         document.forms[0].submit();
     }
     var object_type = showAriane(uri);
@@ -852,15 +902,23 @@ function ptref_onLoad(){
         document.forms[0].appendChild(input2);
     }
 
+    // init title links dynamically
+    const currentUrl2 = new URL(document.location);
+    for (let item of ["networks", "contributors", "commercial_modes", "physical_modes", "poi_types", "traffic_reports"]) {
+        currentUrl2.searchParams.set('uri', `/${item}/`);
+        document.querySelector(`.ptref-title-${item}`).setAttribute("href", currentUrl2.toString());
+    }
+
     ptref = new ptref();
-    ptref.load(ws_name, coverage, uri, showObjectHtml);
+    ptref.load(currentUrl.searchParams.get('config'), uri, showObjectHtml);
 
     // add OpenStreetMap tile layers
     var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     });
-    var mono = L.tileLayer('http://www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    var mono = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
     });
 
     map = L.map('map-canvas', {
@@ -879,6 +937,7 @@ function ptref_onLoad(){
     L.control.scale().addTo(map);
     map.on('click', onMapClick);
 }
+
 
 var map;
 var popup = L.popup();

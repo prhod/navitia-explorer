@@ -27,7 +27,7 @@ function getStopSchedules(){
         for (forbid in forbidden_id) {
             url += "&forbidden_id[]=" + forbidden_id[forbid];
         }
-        callNavitiaJS(ws_name, url, '', function(response){
+        callNavitiaJS_v2(currentConf, url, function(response){
             if (response.stop_schedules) {
                 schedules = response.stop_schedules; 
                 show_schedules_html();
@@ -105,7 +105,6 @@ function getStopSchedule(){
 
 
 function stop_schedules_onLoad(){
-    menu.show_menu("menu_div");
     t=extractUrlParams();
     init_date();
     
@@ -149,6 +148,26 @@ function init_date(sdate, sheure){
     document.getElementById("heure").value=r_heure;
 }
 
+getAutoComplete_StopArea = function (request, response) {
+    $.ajaxSetup( {
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
+    });
+
+    complete_url = currentUrl.host + `coverage/${coverage}/places?type[]=stop_area`
+    $.ajax({
+        url: complete_url,
+        dataType: "json",
+        data: { q: request.term },
+        success: function( data ) {
+            ListData = [];
+            for (var i = 0; i < data['places'].length; i++) {
+                //ListData.push(data['places'][i]['name'])
+                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            }
+            response(ListData);
+        }
+    });
+}
 
 $(document).ready(function(){
     $( "#stop_area_name" ).autocomplete({
@@ -171,6 +190,14 @@ $(document).ready(function(){
     });   
 });
 
+
+const currentUrl = new URL(document.location);
+const currentConf = getConfigByName(currentUrl.searchParams.get('config'));
+
+const ws_name = currentConf["NavitiaURL"];
+const coverage = currentConf["Coverage"];
+const token = currentConf["Token"];
+console.log(document.getElementById("coverage"))
 
 var selected = null;
 var map;

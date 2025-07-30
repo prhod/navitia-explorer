@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css">
 </head>
 <body onload="places_nearby_onLoad();">
+    <title-bar></title-bar>
   <header>
       <div id="params_div"></div>
       <form name="form">
-          <nav id="menu_div"></nav>
           <div id="params">
              <h1>Recherche à Proximité</h1>
              <label for="point_name">Zone d'arrêt : </label>
@@ -31,17 +31,13 @@
         </section>
     </div>
 
-    <footer id="footer" class="footer">
-        github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>
-        <a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
-        <a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
-    </footer>
+    <footer></footer>
 
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
     <script type="text/javascript" src="./assets/js/lib.js"></script>
-    <script type="text/javascript" src="./assets/js/menu.js"></script>
+    <script type="text/javascript" src="components/titleBar.js"></script>
     <script type="text/javascript" src="./assets/js/conversion.js"></script>
     <script type="text/javascript" src="./assets/js/places_nearby.js"></script>
 </body>

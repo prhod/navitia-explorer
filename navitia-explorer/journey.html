@@ -6,16 +6,9 @@
     <link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css">
 </head>
 <body onload="journey_onLoad()">
+    <title-bar></title-bar>
     <div id="params_div"></div>
     <form id="form1">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="#">Navitia Explorer</a>
-            </div>
-            <div id="menu_div">    </div>
-          </div>
-        </nav>        
         <input type="hidden" id="forbidden_uris" name="forbidden_uris" value="">
         <div id="content" >
             <h1 style="text-align:center;padding:0px;margin:0px">Recherche/diagnostique d'itinéraire</h1>
@@ -95,16 +88,12 @@
             </table>
         </div>
     </form>
-    <div id="footer" class="footer">
-        github: <a href="https://github.com/canaltp/navitia-explorer">canaltp/navitia-explorer</a><br/>            
-        <a href="http://www.navitia.io/"><img src='./assets/img/Navitia_logo.png'></a>
-        <a href="http://www.canaltp.fr/"><img src='./assets/img/canaltp_logo.png' ></a>
-    </div>    
+    <footer></footer>
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
     <script type="text/javascript" src="./assets/js/shortcut.js"></script>
-    <script type="text/javascript" src="./assets/js/menu.js"></script>
+    <script type="text/javascript" src="components/titleBar.js"></script>
     <script type="text/javascript" src="./assets/js/lib.js"></script>
     <script type="text/javascript" src="./assets/js/conversion.js"></script>
     <script type="text/javascript" src="./assets/js/journey.js"></script>

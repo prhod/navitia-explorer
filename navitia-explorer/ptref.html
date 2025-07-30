@@ -4,29 +4,28 @@
     <link rel="stylesheet" href="./assets/css/global.css" />
     <link rel="stylesheet" href="./assets/leaflet_0.7.7/leaflet.css" />
     <link rel="stylesheet" href="./assets/jquery-ui.js_1.11.4/jquery-ui.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body onload="ptref_onLoad();">
-    <header>
-        <div id="params_div"></div>
-        <form name="form">
-            <nav id="menu_div"></nav>
-            <input type="hidden" id="uri" name="uri" value="">
-        </form>
-    </header>
+    <title-bar></title-bar>
 
     <div>
-        <h1>Exploration des données</h1>
+        <h1>PTRef - Exploration</h1>
+        <input type="hidden" id="uri" name="uri" value="">
         <h2>
-            <a href="#" onclick="changeURI('/networks/','', '')"> Réseaux </a>-
-            <a href="#" onclick="changeURI('/contributors/','', '')"> Contributeurs </a>-
-            <a href="#" onclick="changeURI('/commercial_modes/','', '')"> Modes commerciaux </a> -
-            <a href="#" onclick="changeURI('/physical_modes/','', '')"> Modes physiques </a> -
-            <a href="#" onclick="changeURI('/poi_types/','', '')"> POIs </a> -
-            <a href="#" onclick="changeURI('/calendars/','', '')"> Calendriers </a> -
-            <a href="#" onclick="changeURI('/traffic_reports/','', '')"> État du trafic </a>  
+            <a href="#" class="ptref-title-networks"> Réseaux </a>-
+            <a href="#" class="ptref-title-contributors"> Contributeurs </a>-
+            <a href="#" class="ptref-title-commercial_modes"> Modes commerciaux </a> -
+            <a href="#" class="ptref-title-physical_modes"> Modes physiques </a> -
+            <a href="#" class="ptref-title-poi_types"> POIs </a> -
+            <a href="#" class="ptref-title-traffic_reports"> État du trafic </a>  
         </h2>    
 
         <div id="ariane_content">Ariane : <div id="ariane" style="display:inline;"></div></div>
+        <table id="ptrefDT" class="display">
+        </table>
+
         <div id="content">
             <section class="first_half">
                 <div id="ptref_content"></div>
@@ -37,10 +36,15 @@
             </section>
         </div>
     </div>
+    <footer></footer>
+
+
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
-    <script type="text/javascript" src="./assets/js/menu.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+    <script type="text/javascript" src="components/titleBar.js"></script>
+    <!-- <script type="text/javascript" src="./assets/js/menu.js"></script> -->
     <script type="text/javascript" src="./assets/js/lib.js"></script>
     <script type="text/javascript" src="./assets/js/conversion.js"></script>
     <script type="text/javascript" src="./assets/js/ptref.js"></script>

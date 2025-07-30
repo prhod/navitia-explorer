@@ -29,36 +29,14 @@ function init_date(sdate, sheure){
     document.getElementById("heure").value=r_heure;
 }
 
-function getNetworkSelect(){
-    callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/?count=1000', '', function(response){
-        first_id = "";
-        selected_exists = false;
-        var str="<select name='network_id' id='network_id' onchange='document.forms[0].submit()'>"
-        for (var n in response.networks) {
-            var network = response.networks[n];
-            if (first_id == "") {first_id = network.id;}
-            selected = "";
-            if ((t["network_id"]) && (t["network_id"]==network.id)) {
-                selected_exists = true;
-                selected = " selected ";
-            }
-            str+= "<option " + selected+ " value='"+network.id+"'>" + network.name + "</option>";
-        }
-        str+="</select>";
-        document.getElementById("network_div").innerHTML=str;
-        if ( (!t["network_id"]) || (!selected_exists) ){
-            //si aucun réseau selectionné : on prend le 1er et on relance la selection de la ligne
-            t["network_id"] = first_id;
-        }
-        getLineSelect();
-    });
-}
+
 
 function getLineSelect(){
     if (t["network_id"]) {
         first_id = "";
         selected_exists = false;
-        callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/?count=1000', '', 
+        navitia_call = `coverage/${t["coverage"]}/networks/${t["network_id"]}/lines/?count=1000`
+        callNavitiaJS_v2(currentConf, navitia_call, 
             function(response){
                 var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.lines) {
@@ -87,7 +65,8 @@ function getRouteSelect(){
     if (t["line_id"]) {
         first_id = ""
         selected_exists = false;
-        callNavitiaJS(ws_name, 'coverage/'+t["coverage"]+'/networks/'+t["network_id"]+'/lines/' + t["line_id"] + '/routes/?count=1000', '', 
+        navitia_call = `coverage/${t["coverage"]}/networks/${t["network_id"]}/lines/${t["line_id"]}/routes/?count=1000`
+        callNavitiaJS_v2(currentConf, navitia_call, 
             function(response){
                 var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.routes) {
@@ -113,11 +92,12 @@ function getRouteSelect(){
 }
 
 function getRouteSchedule(){
-    url="coverage/"+coverage+"/routes/"+t["route_id"]+"/route_schedules/";
-    url+="?from_datetime=" + natural_str_to_iso(
+    date_time = natural_str_to_iso(
         document.getElementById("date").value, 
         document.getElementById("heure").value);
-    callNavitiaJS(ws_name, url, '', function(response){
+    const isoString =  (new Date().toISOString().split('.')[0] + 'Z').replaceAll("-", "").replaceAll(":", "");
+    navitia_call = `coverage/${coverage}/routes/${route_id}/route_schedules/?from_datetime=${isoString}`;
+    callNavitiaJS_v2(currentConf, navitia_call, function(response){
         if (response.route_schedules) {
             schedule = response.route_schedules[0]; //1 seule grille sur un parcours
             show_schedule_html();
@@ -166,7 +146,6 @@ function show_schedule_html(){
 }
 
 function route_schedule_onLoad(){
-    menu.show_menu("menu_div");
     t=extractUrlParams();
 
     init_date();
@@ -174,20 +153,18 @@ function route_schedule_onLoad(){
     if (t["date"]) { document.getElementById("date").value=decodeURIComponent(t["date"]);}
     if (t["heure"]) { document.getElementById("heure").value=decodeURIComponent(t["heure"]);}
 
-    getNetworkSelect();
-
-    map = L.map('map-canvas').setView([48.837212, 2.413], 8);
-    // add an OpenStreetMap tile layer
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    map.on('click', onMapClick);
-
+    getRouteSchedule();
 }
 
+const currentUrl = new URL(document.location);
+const config_name = currentUrl.searchParams.get('config');
+var currentConf = getConfigByName(config_name);
+ws_name = currentConf["NavitiaURL"];
+coverage = currentConf["Coverage"];
+
+var route_id = currentUrl.searchParams.get('route_id');
+
 var selected = null;
-var map;
-var popup = L.popup();
 var t;
 var schedule;
 

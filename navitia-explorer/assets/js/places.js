@@ -1,5 +1,4 @@
 function places_onLoad() {
-    menu.show_menu("menu_div", ws_name, coverage);
 
     t=extractUrlParams();
     document.getElementById("q").value=(t["q"])?t["q"]:"";
@@ -48,24 +47,25 @@ function onMapClick(e) {
         .openOn(map);
 }
 
+
 function doSearch(){
-    url="coverage/"+document.getElementById("coverage").value+"/places?q="+document.getElementById('q').value;
+    url = `coverage/${coverage}/places?q=${document.getElementById('q').value}`;
     if (document.getElementById('administrative_region').checked) {
-        url+= encodeURI("&type[]=administrative_region");
+        url+= "&type[]=administrative_region";
     }
     if (document.getElementById('stop_area').checked) {
-        url+= encodeURI("&type[]=stop_area");
+        url+= "&type[]=stop_area";
     }
     if (document.getElementById('stop_point').checked) {
-        url+= encodeURI("&type[]=stop_point");
+        url+= "&type[]=stop_point";
     }
     if (document.getElementById('poi').checked) {
-        url+= encodeURI("&type[]=poi");
+        url+= "&type[]=poi";
     }
     if (document.getElementById('address').checked) {
-        url+= encodeURI("&type[]=address");
+        url+= "&type[]=address";
     }
-    callNavitiaJS(document.getElementById("ws_name").value, url, '', showPlaces);
+    callNavitiaJS_v2(currentConf, url, showPlaces);
 }
 
 function showPlaces(response){
@@ -80,7 +80,6 @@ function showPlaces(response){
         str+= "<tr>"
         str+= "<th>Type</th>"
         str+= "<th>Name</th>"
-        str+= "<th>Quality</th>"
         str+= "<th>Dist. Vol</th>"
         str+= "<th>Dist. Man</th>"
         str+= "<th>Dist. filaire</th>"
@@ -95,18 +94,17 @@ function showPlaces(response){
                     str+= "<td>" + place.name + "</td>";
                     break;
                 case "stop_area" : 
-                    str+= "<td><a href='ptref.html?"+"&ws_name="+document.getElementById("ws_name").value+
-                        "&coverage="+document.getElementById("coverage").value+"&uri=/stop_areas/"+place.id + "/'>" + place.name + "</a></td>";
+                    str+= `<td><a href='ptref.html?&ws_name=${ws_name}` +
+                        `&coverage=${coverage}&uri=/stop_areas/${place.id}/'>` + place.name + "</a></td>";
                     break;
                 case "address" : 
                     str+= "<td>" + place.name + " ("+ place.id + ")" + "</td>";
                     break;
                 default:
-                    str+= "<td><a href='ptref.html?"+"&ws_name="+document.getElementById("ws_name").value+
-                        "&coverage="+document.getElementById("coverage").value+"&uri=/pois/"+place.id + "/'>" + place.name + "</a></td>";
+                    str+= `<td><a href='ptref.html?&ws_name=${ws_name}` +
+                        `&coverage=${coverage}&uri=/stop_areas/${place.id}/'>` + place.name + "</a></td>";
             }
             coord=eval("place."+place.embedded_type+".coord");
-            str+= "<td>"+place.quality+"</td>" ;
             str+= "<td>"+distance_wgs84(reference_point[1], reference_point[0], coord.lat, coord.lon)+"</td>" ;
             str+= "</tr>";
             place.marker = L.marker([coord.lat, coord.lon]).addTo(map);
@@ -139,6 +137,12 @@ function showPlaces(response){
     document.getElementById('places').innerHTML = str;
     if (placesBounds) {map.fitBounds(placesBounds)};
 }
+
+const currentUrl = new URL(document.location);
+const currentConf = getConfigByName(currentUrl.searchParams.get('config'));
+
+const ws_name = currentConf["NavitiaURL"];
+const coverage = currentConf["Coverage"];
 
 var map;
 var places;
