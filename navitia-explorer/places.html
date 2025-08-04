@@ -8,15 +8,18 @@
     <title-bar></title-bar>
     <div id="params_div"></div>
     <div id="content">
-        <h1>Places</h1>
-        <input type="text" id="q" name="q"> </input><input type="button" value="GO" onclick="doSearch()"> </input>
+        <div style="display: block; text-align: center;">
+            <h1 style="display:inline">Places</h1>
+            <a name="permalink" id="permalink" class="title-permalink" href="#" >🔗</a>
+        </div>
+        <input type="text" id="q" name="q" oninput="doSearch()"> </input>
         <div id="q_filter">
-            <input type="hidden" id="distance_reference" name="distance_reference" value="">
-            <input type="checkbox" id="administrative_region" name="administrative_region" >Sur les communes
-            <input type="checkbox" id="stop_area" name="stop_area">Sur les zones d'arrêts
-            <input type="checkbox" id="poi" name="poi" >Sur les POI
-            <input type="checkbox" id="address" name="address" >Sur les adresses
-            <input type="checkbox" id="stop_point" name="stop_point" >Sur les points d'arrêts
+            <input type="hidden" id="distance_reference" name="distance_reference" value="" onchange="doSearch()">
+            <input type="checkbox" id="administrative_region" name="administrative_region"  onchange="doSearch()">Sur les communes
+            <input type="checkbox" id="stop_area" name="stop_area" onchange="doSearch()">Sur les zones d'arrêts
+            <input type="checkbox" id="poi" name="poi"  onchange="doSearch()">Sur les POI
+            <input type="checkbox" id="address" name="address"  onchange="doSearch()">Sur les adresses
+            <input type="checkbox" id="stop_point" name="stop_point"  onchange="doSearch()">Sur les points d'arrêts
         </div>
         <table style="width:100%; height:400px">
             <tr>

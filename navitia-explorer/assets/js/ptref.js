@@ -6,8 +6,6 @@ ptref = function() {
     this.object_type_list = ["stop_points", "stop_areas", "pois", "poi_types", "networks", "lines", "routes", "vehicle_journeys", "physical_modes", "commercial_modes", "connections", "traffic_reports", "calendars", "contributors", "datasets" ],
     this.response = null,
     this.load = function(config_name, uri, call_back){
-        var currentConf = getConfigByName(config_name);
-        
         ws_name = currentConf["NavitiaURL"];
         coverage = currentConf["Coverage"];
         if (endsWith(uri, "/departures/")) {
@@ -469,6 +467,23 @@ function showErrorHtml(){
     }
 }
 
+function showPOIsInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        columns: [
+            { title: 'poi_type' , data: 'poi_type.name' },
+            { title: 'ID', data: 'id' },
+            { title: 'Label' , data: 'label' },
+            { title: 'Links', render: function  (data, type, row) {
+                playground_url = "https://playground.navitia.io/play.html?request=" +
+                    `https://${currentConf["NavitiaURL"]}/v1/coverage/${currentConf["Coverage"]}/pois/${row["id"]}`
+                result = `<a href="${playground_url}" target="_blank"><img src="assets/img/navitia.png" width="20" height="20" /></a>`;
+                return result;
+            } },
+        ],
+        data: ptref.object_list
+    });
+}
+
 function showPOIsHtml(){
     newBounds=[];
     var ptref_div = document.getElementById('ptref_content');
@@ -524,7 +539,6 @@ function pt_point_item_to_html(html_elem, pt_info){
       html_elem.scrollIntoView();
   });
 
-
   pt_info.marker.bindPopup(
       "<b>"+pt_info.label+"</b>"+
       "<br />"+pt_info.city+
@@ -535,6 +549,27 @@ function pt_point_item_to_html(html_elem, pt_info){
 
   map.addLayer(pt_info.marker);
   newBounds.push([pt_info.lat, pt_info.lon]);
+}
+
+
+
+function showPoiTypesInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        columns: [
+            { title: 'ID', data: 'id' },
+            { title: 'Name' , data: 'name' },
+            { title: 'Links', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/poi_types/${row.id}/pois`);
+                let result = `<a href="${currentUrlTmp.toString()}" target="_blank">POIs</a>` + ' ';
+                playground_url = "https://playground.navitia.io/play.html?request=" +
+                    `https://${currentConf["NavitiaURL"]}/v1/coverage/${currentConf["Coverage"]}/poi_types/${row["id"]}`
+                result += `<a href="${playground_url}" target="_blank"><img src="assets/img/navitia.png" width="20" height="20" /></a>`;
+                return result;
+            } },
+        ],
+        data: ptref.object_list
+    });
 }
 
 function showPoiTypesHtml(){
@@ -673,7 +708,7 @@ function showLinesInTable(){
                     result += pm.name + '\n';
                 }
                 return result;
-            } },                
+            } },
             { title: 'Links', render: function  (data, type, row) {
                 const currentUrlTmp = new URL(document.location);
                 currentUrlTmp.searchParams.set('uri', `/lines/${row.id}/routes`);
@@ -683,10 +718,10 @@ function showLinesInTable(){
                 currentUrlTmp.searchParams.set('uri', `/lines/${row.id}/stop_points`);
                 result += `<a href="${currentUrlTmp.toString()}" target="_blank">StopPoints</a>`;
                 return result;
-            } },                
+            } },
         ],
         data: ptref.object_list
-    });       
+    });
 }
 
 function showLinesHtml(){
@@ -821,9 +856,11 @@ function showObjectHtml(ptref){
     } else if (ptref.object_type == "connections") {
         showConnectionsHtml();
     } else if (ptref.object_type == "poi_types") {
-        showPoiTypesHtml();
+        // showPoiTypesHtml();
+        showPoiTypesInTable();
     } else if (ptref.object_type == "pois") {
-        showPOIsHtml();
+        // showPOIsHtml();
+        showPOIsInTable();
     } else if (ptref.object_type == "departures") {
         showDeparturesHtml();
     } else if (ptref.object_type == "places_nearby") {
@@ -938,6 +975,8 @@ function ptref_onLoad(){
     map.on('click', onMapClick);
 }
 
+const currentUrl = new URL(document.location);
+var currentConf = getConfigByName(currentUrl.searchParams.get('config'));
 
 var map;
 var popup = L.popup();

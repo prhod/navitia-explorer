@@ -47,23 +47,27 @@ function onMapClick(e) {
         .openOn(map);
 }
 
+function setPermalink() {
+    const config = currentUrl.searchParams.get("config");
+    currentUrl.search = "";
+    currentUrl.searchParams.set("config", config);
+    currentUrl.searchParams.set("q", document.getElementById('q').value);
+    for (var elem of ["stop_area", 'administrative_region', 'poi', 'address', 'stop_point']) {
+        if (document.getElementById(elem).checked) {
+            currentUrl.searchParams.set(elem, 'on');
+        }
+    }
+    document.getElementById('permalink').setAttribute("href", currentUrl.toString());
+}
 
 function doSearch(){
+    setPermalink();
     url = `coverage/${coverage}/places?q=${document.getElementById('q').value}`;
-    if (document.getElementById('administrative_region').checked) {
-        url+= "&type[]=administrative_region";
-    }
-    if (document.getElementById('stop_area').checked) {
-        url+= "&type[]=stop_area";
-    }
-    if (document.getElementById('stop_point').checked) {
-        url+= "&type[]=stop_point";
-    }
-    if (document.getElementById('poi').checked) {
-        url+= "&type[]=poi";
-    }
-    if (document.getElementById('address').checked) {
-        url+= "&type[]=address";
+
+    for (var elem of ["stop_area", 'administrative_region', 'poi', 'address', 'stop_point']) {
+        if (document.getElementById(elem).checked) {
+            url+= `&type[]=${elem}`;
+        }
     }
     callNavitiaJS_v2(currentConf, url, showPlaces);
 }
@@ -71,9 +75,12 @@ function doSearch(){
 function showPlaces(response){
     reference_point=document.getElementById("distance_reference").value.split(";");
     placesBounds=false;
-    places=false;
-    markerList=Array();
-    str="";
+    if (places) {
+        for(var p of places){
+            this.map.removeLayer(p.marker);
+        }
+    }
+
     if (response){
         places=response.places;
         var str="<table border='1'>";
@@ -102,7 +109,7 @@ function showPlaces(response){
                     break;
                 default:
                     str+= `<td><a href='ptref.html?&ws_name=${ws_name}` +
-                        `&coverage=${coverage}&uri=/stop_areas/${place.id}/'>` + place.name + "</a></td>";
+                        `&coverage=${coverage}&uri=/pois/${place.id}/'>` + place.name + "</a></td>";
             }
             coord=eval("place."+place.embedded_type+".coord");
             str+= "<td>"+distance_wgs84(reference_point[1], reference_point[0], coord.lat, coord.lon)+"</td>" ;
@@ -145,7 +152,7 @@ const ws_name = currentConf["NavitiaURL"];
 const coverage = currentConf["Coverage"];
 
 var map;
-var places;
+var places = false;
 var placesBounds=false;
 var popup = L.popup();
 
