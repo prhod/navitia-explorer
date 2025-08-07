@@ -8,15 +8,15 @@
     <title-bar></title-bar>
     <div id="params_div"></div>
     <form id="form1">
-        <h1>Fiche horaire de ligne</h1>
+        <h1>Fiche horaire de ligne</h1><a href="#" target="_blank" id="title_playground_link"><img src="assets/img/navitia.png" width="20" height="20" /></a>
         <div id="params">
             chercher une ligne : <input type="text" id="pt_object_line" name="pt_object_line" onchange="displayLines()"></input>
             <div id="network_div" style="display:inline;"></div>
             <div id="line_div" style="display:inline;"></div>
             <div id="route_div" style="display:inline;"></div><br>
-            date : <input type="texte" id="date" name="date" size="5"> 
+            date : <input type="texte" id="date" name="date" size="5">
             heure : <input type="texte" id="heure" name="heure" size="1">
-            <input type="button" value="Rechercher" onclick="document.forms[0].submit();">
+            <input type="button" value="Rechercher" onclick="getRouteSchedule()">
         </div>
     </form>
     <div id="content">

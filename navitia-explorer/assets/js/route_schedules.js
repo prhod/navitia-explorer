@@ -36,7 +36,7 @@ function getLineSelect(){
         first_id = "";
         selected_exists = false;
         navitia_call = `coverage/${t["coverage"]}/networks/${t["network_id"]}/lines/?count=1000`
-        callNavitiaJS_v2(currentConf, navitia_call, 
+        callNavitiaJS_v2(currentConf, navitia_call,
             function(response){
                 var str="<select name='line_id' id='line_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.lines) {
@@ -66,7 +66,7 @@ function getRouteSelect(){
         first_id = ""
         selected_exists = false;
         navitia_call = `coverage/${t["coverage"]}/networks/${t["network_id"]}/lines/${t["line_id"]}/routes/?count=1000`
-        callNavitiaJS_v2(currentConf, navitia_call, 
+        callNavitiaJS_v2(currentConf, navitia_call,
             function(response){
                 var str="<select name='route_id' id='route_id' onchange='document.forms[0].submit()'>"
                 for (var n in response.routes) {
@@ -93,10 +93,14 @@ function getRouteSelect(){
 
 function getRouteSchedule(){
     date_time = natural_str_to_iso(
-        document.getElementById("date").value, 
+        document.getElementById("date").value,
         document.getElementById("heure").value);
     const isoString =  (new Date().toISOString().split('.')[0] + 'Z').replaceAll("-", "").replaceAll(":", "");
     navitia_call = `coverage/${coverage}/routes/${route_id}/route_schedules/?from_datetime=${isoString}`;
+    playground_url = "https://playground.navitia.io/play.html?request=" +
+        `https://${currentConf["NavitiaURL"]}/v1/${navitia_call}`
+
+    document.getElementById("title_playground_link").setAttribute("href", playground_url);
     callNavitiaJS_v2(currentConf, navitia_call, function(response){
         if (response.route_schedules) {
             schedule = response.route_schedules[0]; //1 seule grille sur un parcours
@@ -104,7 +108,7 @@ function getRouteSchedule(){
         }
     });
 }
-    
+
 function show_schedule_html(){
     str="<table border='1px' style='font-size:10px;>";
     str+="<thead>";

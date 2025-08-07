@@ -27,6 +27,11 @@ ptref = function() {
                 }
             }
         }
+        playground_url = "https://playground.navitia.io/play.html?request=" +
+            `https://${currentConf["NavitiaURL"]}/v1/${navitia_call}`
+
+        document.getElementById("title_playground_link").setAttribute("href", playground_url);
+
         callNavitiaJS_v2(currentConf, navitia_call, function(response){
             ptref.response = response;
             var names = Object.keys( response );
