@@ -23,6 +23,7 @@ def create_app(test_config=None):
         return redirect("/index.html", code=302)
 
     @app.route('/api.navitia.io/<path:path>', methods=['GET'])
+    @app.route('/api-cus.navitia.io/<path:path>', methods=['GET'])
     def navitia(path):
         auth_header = request.headers.get('Authorization')
         if auth_header:
@@ -31,14 +32,17 @@ def create_app(test_config=None):
                 'Authorization': f'{auth_header}',
                 'Accept': 'application/json'
             }
-            api_url = f"https://api.navitia.io/v1/{path}"
+            if "api-cus.navitia.io" in request.base_url:
+                api_url = f"https://api-cus.navitia.io/v1/{path}"
+            else:
+                api_url = f"https://api.navitia.io/v1/{path}"
             params_dict = request.args.to_dict(flat=False)
             query_string = urlencode(params_dict, doseq=True)
             # need to keep backets to navitia api calls
             query_string = query_string.replace('%5B', '[').replace('%5D', ']')
             api_url = f"{api_url}?{query_string}"
             print("calling " + api_url)
-            response = requests.get(f"{api_url}", headers=headers)  
+            response = requests.get(f"{api_url}", headers=headers)
             # response.raise_for_status()
             data = response.json()
             return jsonify(data), response.status_code
@@ -50,7 +54,7 @@ def create_app(test_config=None):
     def web(path):
         if allowed_file(path):
             return send_from_directory('navitia-explorer', secured_file(path))
-        else: 
+        else:
         #    return 'bad request!', 400
             abort(404)
 
