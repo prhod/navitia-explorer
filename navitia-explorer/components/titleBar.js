@@ -4,7 +4,7 @@ class TitleBar extends HTMLElement {
     // attaches shadow tree and returns shadow root reference
     // https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow
     const shadow = this.attachShadow({ mode: 'open' });
-        
+
     const TitleBarContainer = document.createElement('div');
     const title = this.title;
     const configs = this.configs;
@@ -24,13 +24,13 @@ class TitleBar extends HTMLElement {
         currentUrl.searchParams.set('config', configs[0].Name);
         window.location = currentUrl.toString();
       }
-    } 
+    }
     for (const c of configs) {
       var selected = (selectedConfig == c.Name) ? "selected" : "";
       configsHTML += `<option ${selected} >` + c.Name + "</option>";
     }
     configsHTML = '<select class="select-title-config">' + configsHTML + '</select>';
-          
+
 
     TitleBarContainer.innerHTML = `
         <style>
@@ -47,7 +47,7 @@ class TitleBar extends HTMLElement {
             float: right;
             font-size: 1.8rem;
           }
-          
+
           .app-name {
             background-color: #333333;
             color : white;
@@ -73,8 +73,8 @@ class TitleBar extends HTMLElement {
             width : 100px;
             height : 30px;
             text-align  :center;
-            line-height : 30px;  
-            border-right : 1px solid #cccccc;          
+            line-height : 30px;
+            border-right : 1px solid #cccccc;
           }
           nav li a{
             display : block ;
@@ -84,13 +84,14 @@ class TitleBar extends HTMLElement {
           }
           nav li :hover{
             background-color : #2c4858ff;
-          }               
+          }
         </style>
         <div class="app-header">
           <span class="app-name">Navitia Explorer</span>
           <nav>
             <ul>
               <li><a href="#" class="titlebar-config">Config</a></li>
+              <li><a href="#" class="titlebar-status">Status</a></li>
               <li><a href="#" class="titlebar-ptref">PTRef</a></li>
               <li><a href="#" class="titlebar-places">Places</a></li>
               <li><a href="#" class="titlebar-journeys">Journeys</a></li>
@@ -103,7 +104,7 @@ class TitleBar extends HTMLElement {
         </div>
       `;
 
-      shadow.appendChild(TitleBarContainer);      
+      shadow.appendChild(TitleBarContainer);
   }
   // Element functionality written in here
     connectedCallback() {
@@ -112,27 +113,14 @@ class TitleBar extends HTMLElement {
       selectConfigElement.addEventListener('change', this.selectConfigElement, false);
 
       const currentUrl = new URL(document.location);
-      currentUrl.pathname = "/config.html"
       const config = currentUrl.searchParams.get('config');
       currentUrl.search = '';
       currentUrl.searchParams.set('config', config);
-      this.shadowRoot.querySelector(`.titlebar-config`).setAttribute("href", currentUrl.toString());
 
-      currentUrl.pathname = "/places.html"
-      this.shadowRoot.querySelector(`.titlebar-places`).setAttribute("href", currentUrl.toString());
-
-      currentUrl.pathname = "/journey.html"
-      this.shadowRoot.querySelector(`.titlebar-journeys`).setAttribute("href", currentUrl.toString());
-
-      currentUrl.pathname = "/route_schedules.html"
-      this.shadowRoot.querySelector(`.titlebar-route_schedules`).setAttribute("href", currentUrl.toString());
-
-      currentUrl.pathname = "/stop_schedules.html"
-      this.shadowRoot.querySelector(`.titlebar-stop_schedules`).setAttribute("href", currentUrl.toString());
-
-      currentUrl.pathname = "/places_nearby.html"
-      this.shadowRoot.querySelector(`.titlebar-places_nearby`).setAttribute("href", currentUrl.toString());
-
+      for (var page of ["config", "status", "places", "journeys", "route_schedules", "stop_schedules", "places_nearby"]) {
+        currentUrl.pathname = `/${page}.html`
+        this.shadowRoot.querySelector(`.titlebar-${page}`).setAttribute("href", currentUrl.toString());
+      }
       currentUrl.pathname = "/ptref.html"
       currentUrl.searchParams.set('uri', '/networks/');
       this.shadowRoot.querySelector(`.titlebar-ptref`).setAttribute("href", currentUrl.toString());
@@ -148,7 +136,7 @@ class TitleBar extends HTMLElement {
 
   selectConfigElement(event) {
     console.log(this);
-    let selectedConf = this.selectedOptions[0].label;  
+    let selectedConf = this.selectedOptions[0].label;
     const currentUrl = new URL(document.location);
     currentUrl.searchParams.set('config', selectedConf);
     window.location.href = currentUrl.toString();
