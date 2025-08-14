@@ -1,0 +1,32 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="./assets/css/global.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/leaflet_0.7.7/leaflet.css" />
+</head>
+<body onload="ptobjects_onLoad()">
+    <title-bar></title-bar>
+    <div id="params_div"></div>
+    <div id="content">
+        <div style="display: block; text-align: center;">
+            <h1 style="display:inline">PTObject</h1>
+            <a name="permalink" id="permalink" class="title-permalink" href="#" >🔗</a>
+            <a href="#" target="_blank" id="title_playground_link"><img src="assets/img/navitia.png" width="20" height="20" /></a>
+        </div>
+        <input type="text" id="q" name="q" oninput="doSearch()"> </input>
+        <table style="width:100%; height:400px">
+            <tr>
+                <td width="50%" valign="top"><div id="places"></div></td>
+                <td><div id="map" style="height: 100%"></div></td>
+            </tr>
+        </table>
+    </div>
+    <footer></footer>
+    <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
+    <script type="text/javascript" src="./assets/js/lib.js"></script>
+    <script type="text/javascript" src="components/titleBar.js"></script>
+    <script type="text/javascript" src="./assets/js/conversion.js"></script>
+    <script type="text/javascript" src="./assets/js/pt_objects.js"></script>
+</body>
+</html>
