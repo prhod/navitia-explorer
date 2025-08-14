@@ -62,14 +62,19 @@ function setPermalink() {
 
 function doSearch(){
     setPermalink();
-    url = `coverage/${coverage}/places?q=${document.getElementById('q').value}`;
+    navitia_call = `coverage/${coverage}/places?q=${document.getElementById('q').value}`;
 
     for (var elem of ["stop_area", 'administrative_region', 'poi', 'address', 'stop_point']) {
         if (document.getElementById(elem).checked) {
-            url+= `&type[]=${elem}`;
+            navitia_call+= `&type[]=${elem}`;
         }
     }
-    callNavitiaJS_v2(currentConf, url, showPlaces);
+
+    playground_url = "https://playground.navitia.io/play.html?request=" +
+        `https://${currentConf["NavitiaURL"]}/v1/${navitia_call}`
+
+    document.getElementById("title_playground_link").setAttribute("href", playground_url);
+    callNavitiaJS_v2(currentConf, navitia_call, showPlaces);
 }
 
 function showPlaces(response){
@@ -87,6 +92,7 @@ function showPlaces(response){
         str+= "<tr>"
         str+= "<th>Type</th>"
         str+= "<th>Name</th>"
+        str+= "<th>Lines</th>"
         str+= "<th>Dist. Vol</th>"
         str+= "<th>Dist. Man</th>"
         str+= "<th>Dist. filaire</th>"
@@ -97,14 +103,19 @@ function showPlaces(response){
             var place = response.places[i];
             str+= "<td>"+place.embedded_type+"</td>";
             switch (place.embedded_type) {
-                case "administrative_region" : 
+                case "administrative_region" :
                     str+= "<td>" + place.name + "</td>";
                     break;
-                case "stop_area" : 
-                    str+= `<td><a href='ptref.html?&ws_name=${ws_name}` +
-                        `&coverage=${coverage}&uri=/stop_areas/${place.id}/'>` + place.name + "</a></td>";
+                case "stop_area" :
+                    str+= `<td><a href='${getPTRefLink(currentConf["Name"], place.embedded_type, place.id)}'>` + place.name + "</a></td>";
+                    console.log(place.stop_area)
+                    str+=`<td>`;
+                    for (l of place.stop_area.lines) {
+                        str+=`<span class='icon-ligne' style='margin: 1px; background-color: #${l.color};'>${l.code}</span>`;
+                    }
+                    str+=`</td>`;
                     break;
-                case "address" : 
+                case "address" :
                     str+= "<td>" + place.name + " ("+ place.id + ")" + "</td>";
                     break;
                 default:
