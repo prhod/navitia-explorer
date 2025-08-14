@@ -10,8 +10,13 @@
     <div id="params_div"></div>
     <form id="form1">
         <input type="hidden" id="forbidden_uris" name="forbidden_uris" value="">
+        <input type="hidden" id="config" name="conf" value="">
         <div id="content" >
-            <h1 style="text-align:center;padding:0px;margin:0px">Recherche/diagnostique d'itinéraire</h1>
+            <div style="display: block; text-align: center;">
+                <h1 style="display:inline">Journeys</h1>
+                <a name="permalink" id="permalink" class="title-permalink" href="#" >🔗</a>
+                <a href="#" target="_blank" id="title_playground_link"><img src="assets/img/navitia.png" width="20" height="20" /></a>
+            </div>
             <div id="params1" style="margin:0px;padding:0px;">
                 <table>
                     <tr>
@@ -22,15 +27,12 @@
                             <input id="to_text" name="to_text" type="text">      <input id="to" name="to" type="hidden">
                         </td>
                         <td  valign="top">
-                            date : <input type="texte" id="date" name="date" size="5"><br>
-                            heure : <input type="texte" id="time" name="time" size="1"><br>
-                        </td>
-                        <td  valign="top">
                             Partir après<input type="radio" id="datetime_represents_d" name="datetime_represents" value="departure" checked="true"><br>
                             Arriver avant<input type="radio" id="datetime_represents_a" name="datetime_represents" value="arrival">
                         </td>
                     </tr>
                 </table>
+                <input type="datetime-local" id="date" name="date"  onchange="getRouteSchedule()">
                 <h3 id="toggle_other_params">Paramètres avancés</h3>
                 <table id="other_params" hidden>
                     <tr>

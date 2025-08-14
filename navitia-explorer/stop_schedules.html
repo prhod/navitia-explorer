@@ -7,19 +7,27 @@
 </head>
 <body onload="stop_schedules_onLoad();">
     <title-bar></title-bar>
+    <div style="display: block; text-align: center;">
+        <h1 style="display:inline">Fiche horaire à l'arrêt</h1>
+        <a name="permalink" id="permalink" class="title-permalink" href="#" >🔗</a>
+        <a href="#" target="_blank" id="title_playground_link"><img src="assets/img/navitia.png" width="20" height="20" /></a>
+    </div>
     <div id="params_div"></div>
     <form id="form1">
         <div id="params">
-            <h1>Fiche horaire à l'arrêt</h1>
             <label for="stop_area_name">Zone d'arrêt : </label>
-            <input id="stop_area_name" name="stop_area_name" type="text">      <input id="stop_area_id" name="stop_area_id" type="hidden"> 
+            <input id="stop_area_name" name="stop_area_name" type="text">      <input id="stop_area_id" name="stop_area_id" type="hidden">
             <label for="stop_point_name">Point d'arrêt : </label>
-            <input id="stop_point_name" name="stop_point_name" type="text" disabled>      <input id="stop_point_id" name="stop_point_id" type="hidden"> 
+            <input id="stop_point_name" name="stop_point_name" type="text" disabled>      <input id="stop_point_id" name="stop_point_id" type="hidden">
             date : <input type="texte" id="date" name="date" size="5"> heure : <input type="texte" id="heure" name="heure" size="1">
             <input type="button" value="Rechercher" onclick="document.forms[0].submit()">
         </div>
     </form>
     <div id="content">
+        <table id="stopscheduleDT" class="display">
+        </table>
+
+
         Chaque colonne du tableau correspond à la grille horaire d'un parcours à un poteau d'arrêt.
         <table width="100%" height="500px" border="1">
             <tr>
@@ -37,6 +45,7 @@
     <script type="text/javascript" src="./assets/jquery/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="./assets/leaflet_0.7.7/leaflet.js"></script>
     <script type="text/javascript" src="./assets/jquery-ui.js_1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
     <script type="text/javascript" src="./assets/js/lib.js"></script>
     <script type="text/javascript" src="components/titleBar.js"></script>
     <script type="text/javascript" src="./assets/js/stop_schedules.js"></script>

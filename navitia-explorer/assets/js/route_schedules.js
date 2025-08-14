@@ -15,18 +15,7 @@ function init_date(sdate, sheure){
         r_date+= (d.getMonth()+1)+"/";
         r_date+= d.getFullYear()
     } else {r_date=sdate;}
-    document.getElementById("date").value=r_date;
-
-    r_heure=""
-    if (!sheure || sheure==""){
-        h=d.getHours();
-        m=d.getMinutes();
-        r_heure+= (h<10)?"0"+h:h;
-        r_heure+= "h";
-        r_heure+= (m<10)?"0"+m:m;
-        //r_heure+= "00";
-    } else {r_heure=sheure;}
-    document.getElementById("heure").value=r_heure;
+    document.getElementById("date").value =  d.toISOString().replaceAll("Z", "")
 }
 
 
@@ -92,10 +81,7 @@ function getRouteSelect(){
 }
 
 function getRouteSchedule(){
-    date_time = natural_str_to_iso(
-        document.getElementById("date").value,
-        document.getElementById("heure").value);
-    const isoString =  (new Date().toISOString().split('.')[0] + 'Z').replaceAll("-", "").replaceAll(":", "");
+    const isoString =  document.getElementById("date").value.replaceAll("-", "").replaceAll(":", "").substring(0,15);
     navitia_call = `coverage/${coverage}/routes/${route_id}/route_schedules/?from_datetime=${isoString}`;
     playground_url = "https://playground.navitia.io/play.html?request=" +
         `https://${currentConf["NavitiaURL"]}/v1/${navitia_call}`

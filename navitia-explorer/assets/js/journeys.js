@@ -67,8 +67,7 @@ function getJourneyListHtml(){
                     if (link.type=="network") sec.network_id=link.id;
                 }
                 //on ajoute un lien vers la grille horaire de ligne pour le jour en question
-                url="route_schedules.html?ws_name="+document.getElementById("ws_name").value+
-                    "&coverage="+document.getElementById("coverage").value;
+                url = `route_schedules.html?config=${document.getElementById("config").value}`;
                 url+="&datetime="+sec.departure_date_time;
                 url+="&network_id="+sec.network_id+"&line_id="+sec.line_id+"&route_id="+sec.route_id;
                 url+="&from_id="+sec.from.id+"&to_id="+sec.to.id;
@@ -166,9 +165,7 @@ function showJourneyOnMap(jo){
                 str+='<tr><td>line code - label</td><td>' + sec.display_informations.code + ' - '+sec.display_informations.label+" "+forbidden_link+"</td></tr>";
                 str+='<tr><td>direction</td><td>' + sec.display_informations.direction + "</td></tr>";
                 str+='<tr><td>headsign</td><td>' + sec.display_informations.headsign + "</td></tr>";
-                str+="<tr><td>vehicle_journey</td><td><a href='ptref.html?"+"&ws_name="+document.getElementById("ws_name").value+
-                    "&coverage="+document.getElementById("coverage").value+
-                    "&uri=/vehicle_journeys/"+vehicle_journey_id + "/'>" + vehicle_journey_id + "</a></td></tr>";
+                str += `<tr><td>vehicle_journey</td><td><a href="${getPTRefLink(currentConf["Name"], "vehicle_journey", vehicle_journey_id)}">${vehicle_journey_id}</a></td></tr>`;
 
             }
             if (sec.duration) {
@@ -295,6 +292,7 @@ function journey_onLoad() {
     t=extractUrlParams();
 
     init_date();
+    document.getElementById("config").value = currentConf["Name"];
     document.getElementById("from").value = (t["from"])?t["from"]:"";
     document.getElementById("from_text").value = (t["from_text"])?t["from_text"]:"";
     document.getElementById("to").value = (t["to"])?t["to"]:"";
@@ -302,9 +300,9 @@ function journey_onLoad() {
     document.getElementById("max_duration_to_pt").value = (t["max_duration_to_pt"])?t["max_duration_to_pt"]:"";
     document.getElementById("metasystem").checked = (t["metasystem"])?t["metasystem"]=="on":false;
     document.getElementById("metasystem_token").value = (t["metasystem_token"])?t["metasystem_token"]:""    ;
-    
+
     document.getElementById("traveler_type").value = (t["traveler_type"])?t["traveler_type"]:"";
-    
+
     if (t["debug"]=="on"){document.getElementById("debug").checked="true";}
     if (t["date"]) { document.getElementById("date").value=decodeURIComponent(t["date"]);}
     if (t["time"]) { document.getElementById("time").value=decodeURIComponent(t["time"]);}
@@ -391,7 +389,7 @@ function show_depart_list(){
         select.add(option);
     }
 }
-    
+
 function show_arrivee_list(){
     select = document.getElementById('iarrivee_list');
     while (select.options.length >0)
@@ -426,80 +424,60 @@ function init_date(sdate, sheure){
         r_date+= (d.getMonth()+1)+"/";
         r_date+= d.getFullYear()
     } else {r_date=sdate;}
-    document.getElementById("date").value=r_date;
-
-    r_heure=""
-    if (!sheure || sheure==""){
-        h=d.getHours();
-        m=d.getMinutes();
-        r_heure+= (h<10)?"0"+h:h;
-        r_heure+= "h";
-        r_heure+= (m<10)?"0"+m:m;
-        //r_heure+= "00";
-    } else {r_heure=sheure;}
-    document.getElementById("time").value=r_heure;
+    document.getElementById("date").value =  d.toISOString().replaceAll("Z", "")
 }
+
 
 function getItinerary(){
     //on vérifie si c'est une coordonnée dans le FROM
     clearMap();
-    url = "";
-    if (!$('#metasystem')[0].checked) {
-        url+="coverage/"+document.getElementById("coverage").value + "/";
-    }
-    url+="journeys?debug="+document.getElementById("debug").checked+
-        "&from="+document.getElementById("from").value+"&to="+document.getElementById("to").value+
-        "&datetime="+natural_str_to_iso(document.getElementById("date").value,document.getElementById("time").value);
-    url+="&min_nb_journeys="+document.getElementById("min_nb_journeys").value;
+    navitia_call = "";
+    const isoString =  document.getElementById("date").value.replaceAll("-", "").replaceAll(":", "").substring(0,15);
+
+    navitia_call += `coverage/${coverage}/journeys?` +
+        `from=${document.getElementById("from").value}&to=${document.getElementById("to").value}&datetime=${isoString}` +
+        `&debug=${document.getElementById("debug").checked}`;
+    navitia_call += "&min_nb_journeys="+document.getElementById("min_nb_journeys").value;
     if (t["datetime_represents"]) {
-        url+="&datetime_represents="+t["datetime_represents"];
+        navitia_call += "&datetime_represents="+t["datetime_represents"];
     }
     if (t["traveler_type"]) {
-        url+="&traveler_type="+t["traveler_type"];
-    }    
+        navitia_call += "&traveler_type="+t["traveler_type"];
+    }
     if (document.getElementById("max_duration_to_pt").value) {
-        url+="&max_duration_to_pt="+parseInt(document.getElementById("max_duration_to_pt").value)*60;
-    } 
+        navitia_call += "&max_duration_to_pt="+parseInt(document.getElementById("max_duration_to_pt").value)*60;
+    }
     if (journey.first_section_mode_list) {
         for (i = 0; i < journey.first_section_mode_list.length; i++){
             var mode = journey.first_section_mode_list[i];
-            url+="&first_section_mode[]="+mode;
+            navitia_call += "&first_section_mode[]="+mode;
         }
     }
     if (journey.last_section_mode_list) {
         for (i = 0; i < journey.last_section_mode_list.length; i++){
             var mode = journey.last_section_mode_list[i];
-            url+="&last_section_mode[]="+mode;
+            navitia_call += "&last_section_mode[]="+mode;
         }
     }
     //ajout des forbidden_uris
     for (i = 0; i < journey.forbidden_uris_list.length; i++){
         var forbidden_uri = journey.forbidden_uris_list[i];
-        url+="&forbidden_uris[]="+forbidden_uri;
+        navitia_call += "&forbidden_uris[]="+forbidden_uri;
     }
 
-    custom_scenario = t["custom_scenario"]
-    if (custom_scenario) {
-        url+="&_override_scenario="+custom_scenario
-    }
-    
     data_freshness = document.getElementById("data_freshness").value
     if (data_freshness) {
-        url += "&data_freshness=" + data_freshness
+        navitia_call += "&data_freshness=" + data_freshness
     }
-    
-    forced_token = "";
-    if ($('#metasystem')[0].checked) {
-        if ($('#metasystem_token')[0].value != "") {
-            forced_token = $('#metasystem_token')[0].value;
-        }
-    }
-    
-    callNavitiaJS(document.getElementById("ws_name").value, url, forced_token, function(response){
+
+    playground_url = getPlaygroundUrl(currentConf["NavitiaURL"], navitia_call)
+    document.getElementById("title_playground_link").setAttribute("href", playground_url);
+
+    callNavitiaJS_v2(currentConf, navitia_call, function(response){
         journey.journey_list=response.journeys;
         if (response.message) {
             journey.journey_error = {
-                'id' : '(aucun id navitia)', 
+                'id' : '(aucun id navitia)',
                 'message' : response.message
             };
         } else {
@@ -509,7 +487,7 @@ function getItinerary(){
         getJourneyListHtml();
     });
 }
-    
+
 function submit_monday_search(){
     d= new Date();
     while (d.getDay()!=1) {d.setDate(d.getDate() + 1);}
@@ -537,6 +515,13 @@ function Journey(){
     this.map_polylines = []
 };
 
+const currentUrl = new URL(document.location);
+const currentConf = getConfigByName(currentUrl.searchParams.get('config'));
+
+const ws_name = currentConf["NavitiaURL"];
+const coverage = currentConf["Coverage"];
+const token = currentConf["Token"];
+
 var selected = null;
 var map;
 var popup = L.popup();
@@ -552,7 +537,7 @@ $(document).ready(function(){
             document.getElementById("from").value = ui.item.id;
         }
    });
-   
+
 /* Arrivée */
    $( "#to_text" ).autocomplete({
         source: getAutoComplete,
@@ -562,9 +547,4 @@ $(document).ready(function(){
         }
     });
 
-   $( "#metasystem" ).click(function() {
-        if ($('#metasystem')[0].checked) {
-            $("#metasystem_token")[0].enabled = $('#metasystem')[0].checked;
-        }
-    });    
 });

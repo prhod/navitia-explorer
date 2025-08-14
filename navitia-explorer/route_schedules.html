@@ -14,9 +14,7 @@
             <div id="network_div" style="display:inline;"></div>
             <div id="line_div" style="display:inline;"></div>
             <div id="route_div" style="display:inline;"></div><br>
-            date : <input type="texte" id="date" name="date" size="5">
-            heure : <input type="texte" id="heure" name="heure" size="1">
-            <input type="button" value="Rechercher" onclick="getRouteSchedule()">
+            <input type="datetime-local" id="date" name="date"  onchange="getRouteSchedule()">
         </div>
     </form>
     <div id="content">

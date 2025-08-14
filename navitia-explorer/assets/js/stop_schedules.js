@@ -21,7 +21,7 @@ function getStopSchedules(){
             url="coverage/"+coverage+"/stop_points/"+t["stop_point_id"]+"/stop_schedules/";
         }
         url += "?from_date_time=" + natural_str_to_iso(
-            document.getElementById("date").value, 
+            document.getElementById("date").value,
             document.getElementById("heure").value);
         //url += "&count="+"10";
         for (forbid in forbidden_id) {
@@ -29,13 +29,72 @@ function getStopSchedules(){
         }
         callNavitiaJS_v2(currentConf, url, function(response){
             if (response.stop_schedules) {
-                schedules = response.stop_schedules; 
+                schedules = response.stop_schedules;
                 show_schedules_html();
+                showStopScheduleInTable(response)
             }
         });
+        playground_url = "https://playground.navitia.io/play.html?request=" +
+            `https://${currentConf["NavitiaURL"]}/v1/${url}`
+
+        document.getElementById("title_playground_link").setAttribute("href", playground_url);
     }
 }
 
+function showStopScheduleInTable(data) {
+    var localData = [];
+    for (var sched of data.stop_schedules){
+        localData = localData.concat(sched.date_times);
+        // for (var sched_datetime of sched.date_times) {
+        //     var item = {};
+        //     item.stop_point_id = sched.stop_point.id;
+        //     item.stop_point_name = sched.stop_point.name;
+        //     item.base_date_time = IsoToJsDate(sched_datetime.base_date_time);
+        //     for (var link of sched_datetime.links) {
+        //         if (link.category == "origin") {
+        //             item.origin_stop_area_id =
+        //         }
+        //     }
+        // }
+    }
+    for (var dt of localData) {
+        for (var link of dt.links) {
+            if (link.category == "origin" && link.type == "stop_area") {
+                dt.origin = {
+                    "id" : link.id,
+                    "type" : link.type,
+                }
+            }
+            if (link.category == "terminus" && link.type == "stop_area") {
+                dt.terminus = {
+                    "id" : link.id,
+                    "type" : link.type,
+                }
+            }
+            if (link.category == "terminus" && link.type == "notes") {
+                dt.terminus_note = {
+                    "id" : link.id,
+                    "type" : link.type,
+                    "value" : data.notes.find( (elem) => elem.id == link.id).value
+                }
+            }
+        }
+    }
+    console.log(localData);
+    stopscheduleDT = new DataTable('#stopscheduleDT', {
+        columns: [
+            { title: 'base_date_time' , data: 'base_date_time' },
+            { title: 'origin' , data: 'origin.id' },
+            { title: 'terminus' , data: 'terminus.id' },
+            { title: 'terminus_note' , render: function (data, type, row){
+                 return (row.terminus_note) ? row.terminus_note.value : "";
+            } },
+        ],
+        pageLength: 40,
+        data: localData
+    });
+
+}
 function show_schedules_html(){
     str = "";
     str+= "<table>";
@@ -93,11 +152,11 @@ function getStopSchedule(){
         url="coverage/"+coverage+"/stop_areas/"+t["stop_area_id"]+"/stop_schedules/";
     }
     url+="?from_datetime=" + natural_str_to_iso(
-        document.getElementById("date").value, 
+        document.getElementById("date").value,
         document.getElementById("heure").value);
-    callNavitia(ws_name, url, function(response){
+    callNavitiaJS_v2(currentConf, url, function(response){
         if (response.route_schedules) {
-            schedules = response.stop_schedules; 
+            schedules = response.stop_schedules;
             show_schedules_html();
         }
     });
@@ -107,7 +166,7 @@ function getStopSchedule(){
 function stop_schedules_onLoad(){
     t=extractUrlParams();
     init_date();
-    
+
     document.getElementById("stop_area_name").value = (t["stop_area_name"])?t["stop_area_name"]:"";
     document.getElementById("stop_area_id").value = (t["stop_area_id"])?t["stop_area_id"]:"";
     document.getElementById("stop_point_name").value = (t["stop_point_name"])?t["stop_point_name"]:"";
@@ -123,7 +182,7 @@ function stop_schedules_onLoad(){
     }).addTo(map);
     map.on('click', onMapClick);
 }
- 
+
 function init_date(sdate, sheure){
     r_date=""
     d= new Date()
@@ -148,27 +207,6 @@ function init_date(sdate, sheure){
     document.getElementById("heure").value=r_heure;
 }
 
-getAutoComplete_StopArea = function (request, response) {
-    $.ajaxSetup( {
-        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(token + ":" )); }
-    });
-
-    complete_url = currentUrl.host + `coverage/${coverage}/places?type[]=stop_area`
-    $.ajax({
-        url: complete_url,
-        dataType: "json",
-        data: { q: request.term },
-        success: function( data ) {
-            ListData = [];
-            for (var i = 0; i < data['places'].length; i++) {
-                //ListData.push(data['places'][i]['name'])
-                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
-            }
-            response(ListData);
-        }
-    });
-}
-
 $(document).ready(function(){
     $( "#stop_area_name" ).autocomplete({
         source: getAutoComplete_StopArea,
@@ -177,7 +215,7 @@ $(document).ready(function(){
             document.getElementById("stop_area_id").value = ui.item.id;
         }
    });
-   
+
     $( document ).tooltip({
         items: "span",
         content: function() {
@@ -187,7 +225,7 @@ $(document).ready(function(){
                 return $( "#"+tooltip ).html();
             }
         }
-    });   
+    });
 });
 
 

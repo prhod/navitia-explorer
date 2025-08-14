@@ -64,8 +64,8 @@ function validateJSON(jsonText)
 function callNavitiaJS_v2(NavitiaConfig, navitia_service_url, callBack){
     const currentUrl = new URL(document.location);
     callApiJS_withParams(
-        NavitiaConfig["Token"], 
-        `${currentUrl.protocol}//${currentUrl.host}/${NavitiaConfig["NavitiaURL"]}/${navitia_service_url}`, 
+        NavitiaConfig["Token"],
+        `${currentUrl.protocol}//${currentUrl.host}/${NavitiaConfig["NavitiaURL"]}/${navitia_service_url}`,
         callBack
     );
 }
@@ -94,34 +94,28 @@ function callApiJS_withParams(token, url, callBack){
     });
 }
 
-getAutoComplete = function (request, response) {
-    var metasystem = document.getElementById("metasystem").checked;
-    if (metasystem)
-    {
-      complete_url = document.getElementById("navitia_api").value + "/places?";
-      var api_key = document.getElementById("metasystem_token")?document.getElementById("metasystem_token"):document.getElementById("token").value;
-    }
-    else
-    {
-      complete_url = document.getElementById("navitia_api").value + "coverage/" + document.getElementById("coverage").value + "/places?";
-      var api_key = document.getElementById("token").value;
-    }
-
-    $.ajaxSetup( {
-        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(api_key + ":" )); }
-    });
-
-    $.ajax({
-        url: complete_url,
-        dataType: "json",
-        data: { q: request.term },
-        success: function( data ) {
+getAutoComplete = function (request, jqResponse) {
+    url = `coverage/${coverage}/places?&q=${request.term}`
+    callNavitiaJS_v2(currentConf, url, function(response){
+        if (response.places) {
             ListData = [];
-            for (var i = 0; i < data['places'].length; i++) {
-                //ListData.push(data['places'][i]['name'])
-                ListData.push({"id": data['places'][i]['id'], "value": data['places'][i]['name']})
+            for (var pl of response.places) {
+                ListData.push({"id": pl.id, "value": pl.name})
             }
-            response(ListData);
+            jqResponse(ListData);
+        }
+    });
+}
+
+getAutoComplete_StopArea = function (request, jqResponse) {
+    url = `coverage/${coverage}/places?type[]=stop_area&q=${request.term}`
+    callNavitiaJS_v2(currentConf, url, function(response){
+        if (response.places) {
+            ListData = [];
+            for (var pl of response.places) {
+                ListData.push({"id": pl.id, "value": pl.name})
+            }
+            jqResponse(ListData);
         }
     });
 }
@@ -371,3 +365,17 @@ function getConfigByName(configName) {
     var currentConf = configList.find((element) => element["Name"] == configName);
     return currentConf;
 };
+
+function getPTRefLink(configName, obj_type, obj_id){
+    const currentUrlTmp = new URL(document.location);
+    currentUrlTmp.pathname = "/ptref.html"
+    currentUrlTmp.search = '';
+    currentUrlTmp.searchParams.set('config', configName);
+    currentUrlTmp.searchParams.set('uri', `/${obj_type}s/${obj_id}`);
+    return currentUrlTmp.toString();
+}
+
+function getPlaygroundUrl(NavitiaUrl, navitia_call) {
+    return "https://playground.navitia.io/play.html?request=" +
+            encodeURIComponent(`https://${currentConf["NavitiaURL"]}/v1/${navitia_call}`);
+}
