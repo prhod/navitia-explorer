@@ -474,6 +474,7 @@ function showErrorHtml(){
 
 function showPOIsInTable(){
     const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
         columns: [
             { title: 'poi_type' , data: 'poi_type.name' },
             { title: 'ID', data: 'id' },
@@ -560,6 +561,7 @@ function pt_point_item_to_html(html_elem, pt_info){
 
 function showPoiTypesInTable(){
     const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
         columns: [
             { title: 'ID', data: 'id' },
             { title: 'Name' , data: 'name' },
@@ -701,6 +703,7 @@ function showConnectionsHtml(){
 
 function showLinesInTable(){
     const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
         columns: [
             { title: 'Code', data: 'code', render: function  (data, type, row) {
                 return "<span class='icon-ligne' style='background-color: #"+row.color+";'>"+row.code + "</span>";
