@@ -99,6 +99,7 @@ class TitleBar extends HTMLElement {
               <li><a href="#" class="titlebar-route_schedules">Route Schedules</a></li>
               <li><a href="#" class="titlebar-stop_schedules">Stop Schedules</a></li>
               <li><a href="#" class="titlebar-places_nearby">Nearby</a></li>
+              <li><a href="#" class="titlebar-disruptions">Disruptions</a></li>
             </ul>
           </nav>
           ${configsHTML}
@@ -118,7 +119,7 @@ class TitleBar extends HTMLElement {
       currentUrl.search = '';
       currentUrl.searchParams.set('config', config);
 
-      for (var page of ["config", "status", "pt_objects", "places", "journeys", "route_schedules", "stop_schedules", "places_nearby"]) {
+      for (var page of ["config", "status", "pt_objects", "places", "journeys", "route_schedules", "stop_schedules", "places_nearby", "disruptions"]) {
         currentUrl.pathname = `/${page}.html`
         this.shadowRoot.querySelector(`.titlebar-${page}`).setAttribute("href", currentUrl.toString());
       }
