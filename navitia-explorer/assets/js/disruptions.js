@@ -23,10 +23,17 @@ function page_onLoad() {
     document.getElementById(`subsection-equipment_reports`).setAttribute("href", newUrl.toString());
 
     callNavitiaJS_v2(currentConf, navitia_call, function(response){
-        if ("line_reports" in response) {
-            showLineReportsInTable(response);
-        } else {
-            showdisruptionsInTable(response.disruptions);
+        switch (call_type) {
+            case "line_reports":
+                showLineReportsInTable(response);
+                break;
+            case "equipment_reports":
+                showEquipmentReportsInTable(response);
+                break;
+            case "traffic_reports":
+            case "disruptions":
+            default:
+                showdisruptionsInTable(response.disruptions);
         }
     });
 
@@ -85,43 +92,29 @@ function showEquipmentReportsInTable(navitia_response){
     data = [];
     for (let er of navitia_response.equipment_reports) {
         for (let sae of er.stop_area_equipments) {
-            data.push({
-                line : er.line,
-                stop_area : sae.stop_area,
-                equipment_details : sae.equipment_details
-            })
+            for (let eqd of sae.equipment_details) {
+                data.push({
+                    line : er.line,
+                    stop_area : sae.stop_area,
+                    equipment_detail : eqd,
+                })
+            }
         }
     }
     const disruptionsDT = new DataTable('#disruptionsDT', {
         order: [],
         columns: [
-            {
-                className: 'dt-control',
-                orderable: false,
-                data: null,
-                defaultContent: ''
-            },
             { title: 'Line', render: function  (data, type, row) {
                 return `<a href="${getPTRefLink(currentConf["Name"], "line", row.line.id)}"><span title="${row.line.name}" class='icon-ligne' style='margin: 1px; background-color: #${row.line.color};'>${row.line.code}</span></a>`;
             }},
             { title: 'StopArea', render: function  (data, type, row) {
-                return `<a href="${getPTRefLink(currentConf["Name"], "line", row.line.id)}">${row.stop_area.name}</a>`;
-            }}
+                return `<a href="${getPTRefLink(currentConf["Name"], "stop_area", row.stop_area.id)}">${row.stop_area.name}</a>`;
+            }},
+            { title: 'Eq. id', data: 'equipment_detail.id'},
+            { title: 'Type', data: 'equipment_detail.embedded_type'},
+            { title: 'Status', data: 'equipment_detail.current_availability.status'},
         ],
-        data: navitia_response.line_reports
-    });
-    disruptionsDT.on('click', 'tbody td.dt-control', function (e) {
-        let tr = e.target.closest('tr');
-        let row = disruptionsDT.row(tr);
-
-        if (row.child.isShown()) {
-            // This row is already open - close it
-            row.child.hide();
-        }
-        else {
-            // Open this row
-            row.child(displayLineReportDetails(row.data())).show();
-        }
+        data: data
     });
 }
 

@@ -155,68 +155,70 @@ function setActive(el) {
     el.parentNode.className += ' active';
 }
 
-function showNetworksHtml(){
-    var ptref_div = document.getElementById('ptref_content');
-    var total = ptref_div.appendChild(document.createElement('div'));
-    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
-
-    for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title'>" + n.name + "</a>";
-        item.innerHTML += pt_item_id_to_html(n.id);
-        item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/lines/', true, n.id)+"' > Lignes </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
-        worst_disruption = getWorstDisruption(n.links);
-        item.innerHTML += getSeverityIcon(worst_disruption);
-    }
+function showNetworksInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
+        columns: [
+            { title: 'Id', data: 'id'},
+            { title: 'Name' , data: 'name' },
+            { title: 'Links', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/networks/${row.id}/physical_modes`);
+                let result = `<a href="${currentUrlTmp.toString()}" target="_blank">PhysicalModes</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/networks/${row.id}/commercial_modes`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">CommercialModes</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/networks/${row.id}/lines`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">Lines</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/networks/${row.id}/stop_areas`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">StopAreas</a>`;
+                return result;
+            } },
+        ],
+        data: ptref.object_list
+    });
 }
 
-function showContributorsHtml(){
-    var ptref_div = document.getElementById('ptref_content');
-    var total = ptref_div.appendChild(document.createElement('div'));
-    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
 
-    for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title'>" + n.name + "</a>";
-        item.innerHTML += pt_item_id_to_html(n.id);
-        item.innerHTML += "<br>";
-        item.innerHTML += "<small>licence : " + ((n.license)?n.license : "pas de licence") + "</small>";
-        item.innerHTML += "<br><a href='"+getNewURI('/datasets/', true, n.id)+"' > Datasets </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/networks/', true, n.id)+"' > Réseaux </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
-        worst_disruption = getWorstDisruption(n.links);
-        item.innerHTML += getSeverityIcon(worst_disruption);
-    }
+function showContributorsInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
+        columns: [
+            { title: 'Id', data: 'id'},
+            { title: 'Name' , data: 'name' },
+            { title: 'Licence' , data: 'license' },
+            { title: 'Links', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/contributors/${row.id}/datasets`);
+                let result = `<a href="${currentUrlTmp.toString()}" target="_blank">Datasets</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/contributors/${row.id}/networks`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">Networks</a>` + ' ';
+                currentUrlTmp.searchParams.set('uri', `/contributors/${row.id}/stop_areas`);
+                result += `<a href="${currentUrlTmp.toString()}" target="_blank">StopAreas</a>`;
+                return result;
+            } },
+        ],
+        data: ptref.object_list
+    });
 }
 
-function showDatasetsHtml(){
-    var ptref_div = document.getElementById('ptref_content');
-    var total = ptref_div.appendChild(document.createElement('div'));
-    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
 
-    for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title'>" + n.description + "</a>";
-        item.innerHTML += pt_item_id_to_html(n.id);
-        item.innerHTML += "<br>";
-        var myDate = n.end_validation_date?IsoToJsDate(n.end_validation_date):now;
-        item.innerHTML += "<small>" + NavitiaDateTimeToString(n.start_validation_date, "dd/mm/yyyy") + " - <span style='"+DateToColor(myDate) + "'>" +NavitiaDateTimeToString(n.end_validation_date, "dd/mm/yyyy") + "</span></small><br>";
-        item.innerHTML += "<small>Type (TH / AD) : " + n.realtime_level + "</small>";
-        item.innerHTML += "<br><a href='"+getNewURI('/networks/', true, n.id)+"' > Réseaux </a>"
-        worst_disruption = getWorstDisruption(n.links);
-        item.innerHTML += getSeverityIcon(worst_disruption);
-    }
+function showDatasetsInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
+        columns: [
+            { title: 'Id', data: 'id'},
+            { title: 'Description' , data: 'description' },
+            { title: 'Start date' , data: 'start_validation_date' },
+            { title: 'End date' , data: 'end_validation_date' },
+            { title: 'Links', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/contributors/${row.id}/networks`);
+                return  `<a href="${currentUrlTmp.toString()}" target="_blank">Networks</a>`;
+            } },
+        ],
+        data: ptref.object_list
+    });
 }
-
 
 function showCalendarsHtml(){
     var ptref_div = document.getElementById('ptref_content');
@@ -602,71 +604,24 @@ function setConnectionFilter(){
     document.forms[0].submit();
 }
 
+function AddConnectionComplementaryData(ptref){
+    for (c of ptref.response.connections) {
+        c.distance = distance_wgs84(c.origin.coord.lat, c.origin.coord.lon, c.destination.coord.lat, c.destination.coord.lon);
+        let speed = c.distance / c.duration;
+        c.speed = Math.round(speed * 100) / 100;
+        c.speed_kmh = Math.round(speed * 3.6 * 100)/100;
+    }
+};
+
 function showConnectionsHtml(){
     newBounds=[];
-    start_stopoints=[];
-    start_filter = document.getElementById("connection_start_filter").value;
-    end_stopoints=[];
-    end_filter = document.getElementById("connection_end_filter").value;
-    duree_max = 0;
-    vit_max_man = 0;
-    str="";
-    str+='<table border=1 style="font-size:11px"><tr>';
-    str+='<th>Origine</th>';
-    str+='<th>Destination</th>';
-    str+='<th>Durée</th>';
-    str+='<th>Dist. vol</th>';
-    str+='<th>Vit. vol</th>';
-    str+='<th>Dist. Man</th>';
-    str+='<th>Vit. Man</th>';
-    str+='</tr>';
     for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        base_url=location.href;
-        if (start_stopoints.indexOf(n.origin.id)==-1) {start_stopoints.push(n.origin.id);}
-        if (end_stopoints.indexOf(n.destination.id)==-1) {end_stopoints.push(n.destination.id);}
+        n = ptref.object_list[i];
+        base_url = location.href;
 
-        if ((start_filter != "") && (n.origin.id != start_filter) ) continue;
-        if ((end_filter != "") && (n.destination.id != end_filter) ) continue;
-
-        dist=distance_wgs84(n.origin.coord.lat, n.origin.coord.lon, n.destination.coord.lat, n.destination.coord.lon);
-        s_str="<tr>";
-        s_str+='<td><a href="'+base_url+"stop_points/"+n.origin.id+'/">'+n.origin.name+'</a>';
-        s_str+='<br><span style="font-size:10px">'+n.origin.id+'</span>';
-        s_str+='</td>';
-        s_str+='<td><a href="'+base_url+"stop_points/"+n.destination.id+'/">'+n.destination.name+'</a>';
-        s_str+='<br><span style="font-size:10px">'+n.destination.id+'</span>';
-        s_str+='</td>';
-        duree_map = n.display_duration;
-        if (duree_max < duree_map) {
-            duree_max = duree_map;
-        }
-        duree_tolerence = n.duration - n.display_duration;
-        chaine= duree_map + "s (tol:"+duree_tolerence+"s)";
-        if (duree_map < parseInt(dist)/1.12 ) {
-            s_str+='<td><font color="red">'+chaine+"</font></td>";
-        } else {
-            s_str+='<td>'+chaine + "</td>";
-        }
-        s_str+='<td>'+ dist + "m</td>";
-        vit=dist/n.duration*3600/1000;
-        s_str+='<td>'+ Math.round(vit*10)/10 + " km/h</td>";
-
-        dist_man=Math.round(dist*1.414*10)/10;
-        s_str+='<td>'+ dist_man + "m</td>";
-        vit=dist_man/n.duration*3600/1000;
-        s_str+='<td>'+ Math.round(vit*10)/10 + " km/h</td>";
-        if (vit_max_man < vit) {
-            vit_max_man = vit;
-        }
-
-
-//                s_str+='<td><a href="'+base_url+'/lines/'+'">Lignes</a></td>';
-        s_str+="</tr>\n";
-        str+=s_str;
-        coord=n.origin.coord;
+        coord = n.origin.coord;
         n.marker = L.marker([coord.lat, coord.lon]).addTo(map);
-        lamb=WGS_ED50(coord.lon, coord.lat);
+        lamb = WGS_ED50(coord.lon, coord.lat);
         n.marker.bindPopup("<b>"+n.origin.name+"</b>"+
             "<br />Id: "+n.origin.id+
             "<br />LatLon wgs84: "+coord.lat + ", "+ coord.lon+
@@ -677,36 +632,40 @@ function showConnectionsHtml(){
 
         newBounds.push([coord.lat, coord.lon]);
     }
-    str+='</table>';
-    str+='<br>durée max : ' + duree_max + ' s';
-    str+='<br>Vitesse max (manh) : ' + Math.round(vit_max_man*10)/10 + ' km/h';
-
-    start_stopoints.sort();
-    start_select = '<select id="connection_start" name="connection_start" onChange="setConnectionFilter()">';
-    start_select += '<option value="">Tous</option>';
-    for (sp_idx in start_stopoints) {
-        selected = (start_filter == start_stopoints[sp_idx])?" selected ":"";
-        start_select += '<option'+selected+'>'+start_stopoints[sp_idx]+'</option>';
-    }
-    start_select += '</select>'
-    end_stopoints.sort();
-    end_select = '<select id="connection_end" name="connection_end" onChange="setConnectionFilter()">';
-    end_select += '<option value="">Tous</option>';
-    for (sp_idx2 in end_stopoints) {
-        selected = (end_filter == end_stopoints[sp_idx2])?" selected ":"";
-        end_select += '<option'+selected+'>'+end_stopoints[sp_idx2]+'</option>';
-    }
-    end_select += '</select>'
-    document.getElementById('ptref_content').innerHTML=start_select + end_select + "<br>" + str;
     if (newBounds) {map.fitBounds(newBounds)};
+}
+
+function showConnectionsInTable(){
+    const ptrefDT = new DataTable('#ptrefDT', {
+        order: [],
+        columns: [
+            { title: 'Origin', data: 'origin.id', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/stop_points/${row.origin.id}`);
+                return `<a href="${currentUrlTmp.toString()}" target="_blank">${row.origin.id}</a>`;
+            } },
+            { title: 'Destination', data: 'destination.id', render: function  (data, type, row) {
+                const currentUrlTmp = new URL(document.location);
+                currentUrlTmp.searchParams.set('uri', `/stop_points/${row.destination.id}`);
+                return `<a href="${currentUrlTmp.toString()}" target="_blank">${row.destination.id}</a>`;
+            } },
+            { title: 'Duration', data: 'duration'},
+            { title: 'Duration displayed', data: 'display_duration'},
+            { title: 'Max duration', data: 'max_duration'},
+            { title: 'Distance', data: 'distance'},
+            { title: 'Speed (m/s)', data: 'speed'},
+            { title: 'Speed (km/h)', data: 'speed_kmh'},
+        ],
+        data: ptref.response.connections
+    });
 }
 
 function showLinesInTable(){
     const ptrefDT = new DataTable('#ptrefDT', {
         order: [],
         columns: [
-            { title: 'Code', data: 'code', render: function  (data, type, row) {
-                return "<span class='icon-ligne' style='background-color: #"+row.color+";'>"+row.code + "</span>";
+            { title: 'Code (Id)', data: 'code', render: function  (data, type, row) {
+                return `<span class='icon-ligne' style='background-color: #${row.color};'>${row.code}</span> <small>(${row.id})</small>`;
             } },
             { title: 'Name' , data: 'name' },
             { title: 'Commercial Mode', data: 'commercial_mode.name' },
@@ -732,25 +691,9 @@ function showLinesInTable(){
     });
 }
 
-function showLinesHtml(){
-    var ptref_div = document.getElementById('ptref_content');
-    var total = ptref_div.appendChild(document.createElement('div'));
-    total.textContent = 'Nb : ' + ptref.object_list.length + ' / ' + ptref.object_count ;
+function showLinesOnMap(){
     newBounds=false;
-
-    for (var i in ptref.object_list){
-        n=ptref.object_list[i];
-        var item = ptref_div.appendChild(document.createElement('div'));
-        item.className = 'item';
-        item.innerHTML = "<a class='title' id='item_"+n.id+"' onclick='setActive(this)'><span class='icon-ligne' style='background-color: #"+n.color+";'>"+n.code + "</span> : " + n.name + "</a>";
-        item.innerHTML += pt_item_id_to_html(n.id);
-        item.innerHTML += "<br><a href='"+getNewURI('/physical_modes/', true, n.id)+"' > Modes Ph </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/commercial_modes/', true, n.id)+"' >Modes co </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/calendars/', true, n.id)+"' > Calendriers </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/stop_areas/', true, n.id)+"' > Zones d'arrêts </a>"
-        item.innerHTML += "- <a href='"+getNewURI('/routes/', true, n.id)+"' > Parcours </a>"
-        worst_disruption = getWorstDisruption(n.links);
-        item.innerHTML += getSeverityIcon(worst_disruption);
+    for (var n of ptref.object_list){
         if (n.geojson.coordinates.length>0) {
             drawOptions={color:"#"+n.color, opacity:1, weight:3};
             n.layer=L.geoJson(n.geojson, drawOptions).addTo(map);
@@ -759,8 +702,6 @@ function showLinesHtml(){
                 locale.on('click', function(e) {
                     map.fitBounds(locale.getBounds());
                     item = document.getElementById(locale.feature.geometry.item_id);
-                    setActive(item);
-                    item.scrollIntoView()
                   });
             })
             if (!newBounds) {newBounds=n.layer.getBounds();}
@@ -849,9 +790,10 @@ function showRoutesHtml(){
 
 function showObjectHtml(ptref){
     if (ptref.object_type == "lines") {
-        showLinesHtml();
         showLinesInTable();
+        showLinesOnMap();
     } else if ( (ptref.object_type == "physical_modes") || (ptref.object_type == "commercial_modes") ) {
+        document.getElementById("map-canvas").style.visibility='hidden';
         showModesHtml();
     } else if (ptref.object_type == "stop_areas") {
         showStopAreasHtml();
@@ -860,9 +802,12 @@ function showObjectHtml(ptref){
     } else if (ptref.object_type == "routes") {
         showRoutesHtml();
     } else if (ptref.object_type == "vehicle_journeys") {
+        document.getElementById("map-canvas").style.visibility='hidden';
         showVehicleJourneysHtml();
     } else if (ptref.object_type == "connections") {
+        AddConnectionComplementaryData(ptref);
         showConnectionsHtml();
+        showConnectionsInTable();
     } else if (ptref.object_type == "poi_types") {
         // showPoiTypesHtml();
         showPoiTypesInTable();
@@ -878,11 +823,14 @@ function showObjectHtml(ptref){
     } else if (ptref.object_type == "calendars") {
         showCalendarsHtml();
     } else if (ptref.object_type == "networks") {
-        showNetworksHtml();
+        document.getElementById("map-canvas").style.visibility='hidden';
+        showNetworksInTable();
     } else if (ptref.object_type == "contributors") {
-        showContributorsHtml();
+        document.getElementById("map-canvas").style.visibility='hidden';
+        showContributorsInTable();
     } else if (ptref.object_type == "datasets") {
-        showDatasetsHtml();
+        document.getElementById("map-canvas").style.visibility='hidden';
+        showDatasetsInTable();
     } else {
         showErrorHtml();
     }
@@ -930,22 +878,24 @@ function ptref_onLoad(){
     }
     var object_type = showAriane(uri);
 
+    connection_start_filter = currentUrl.searchParams.get('connection_start_filter') || "";
+    connection_end_filter = currentUrl.searchParams.get('connection_end_filter') || "";
     //on crée les éléments complémentaires du formulaire si besoin
-    if (object_type == "connections"){
-        var input1 = document.createElement("input");
-        input1.type = "hidden";
-        input1.id = "connection_start_filter";
-        input1.name = "connection_start_filter";
-        input1.value = (t["connection_start_filter"])?t["connection_start_filter"]:"";
-        document.forms[0].appendChild(input1);
+    // if (object_type == "connections"){
+    //     var input1 = document.createElement("input");
+    //     input1.type = "hidden";
+    //     input1.id = "connection_start_filter";
+    //     input1.name = "connection_start_filter";
+    //     input1.value = connection_start_filter;
+    //     document.forms[0].appendChild(input1);
 
-        var input2 = document.createElement("input");
-        input2.type = "hidden";
-        input2.id = "connection_end_filter";
-        input2.name = "connection_end_filter";
-        input2.value = (t["connection_end_filter"])?t["connection_end_filter"]:"";;
-        document.forms[0].appendChild(input2);
-    }
+    //     var input2 = document.createElement("input");
+    //     input2.type = "hidden";
+    //     input2.id = "connection_end_filter";
+    //     input2.name = "connection_end_filter";
+    //     input2.value = connection_end_filter;
+    //     document.forms[0].appendChild(input2);
+    // }
 
     // init title links dynamically
     const currentUrl2 = new URL(document.location);
