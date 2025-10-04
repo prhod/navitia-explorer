@@ -1,0 +1,8 @@
+name: GitHub Actions Demo
+run-name: testing GitHub Actions
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: [github-arc-runner]
+    steps:
+      - run: echo "This job's status is ${{ job.status }}."
