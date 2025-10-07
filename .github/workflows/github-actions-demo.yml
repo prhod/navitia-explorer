@@ -6,7 +6,7 @@ jobs:
     runs-on: [github-arc-runner]
     steps:
       - name: Set up Docker
-        uses: docker/setup-docker-action@v4      
+        uses: sudo apt-get -y install podman
       - name: Build image
         run: docker build . -t navitia-explorer:latest 
       - name: export image
