@@ -5,4 +5,8 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: [github-arc-runner]
     steps:
+      - name: Build image
+        run: docker build . -t navitia-explorer:latest 
+      - name: export image
+        run : docker save navitia-explorer:latest > navitia-explorer.tar
       - run: echo "This job's status is ${{ job.status }}."
