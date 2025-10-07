@@ -5,9 +5,11 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: [github-arc-runner]
     steps:
-      - name: Set up Docker
+      - name: update
         run: |
-          sudo apt update
+          sudo apt update && sudo apt upgrade -y
+      - name: Set up Podman
+        run: |
           sudo apt-get -y install podman
       # - run: findmnt -o PROPAGATION /
       # - run: sudo mount -o remount,shared / /
