@@ -9,6 +9,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt-get -y install podman
+      - run: findmnt -o PROPAGATION /
       - name: Build image
         run: podman build -t navitia-explorer:latest .
       - name: export image
