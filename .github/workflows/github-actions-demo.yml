@@ -5,6 +5,8 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: [github-arc-runner]
     steps:
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4      
       - name: Build image
         run: docker build . -t navitia-explorer:latest 
       - name: export image
