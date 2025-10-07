@@ -12,7 +12,7 @@ jobs:
       # - run: findmnt -o PROPAGATION /
       # - run: sudo mount -o remount,shared / /
       - name: Build image
-        run: podman build -t navitia-explorer:latest -o type=tar,dest=/tmp/output.tar .
+        run: podman build -t navitia-explorer:latest . --output type=tar,dest=/tmp/output.tar
       - name: export image
         run : podman save navitia-explorer:latest > navitia-explorer.tar
       - run: echo "This job's status is ${{ job.status }}."
